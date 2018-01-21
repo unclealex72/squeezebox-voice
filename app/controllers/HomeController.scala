@@ -25,17 +25,6 @@ class HomeController @Inject()(cc: ControllerComponents, mediaUpdateMediator: Me
     mediaUpdateMediator.update.map(_ => Ok(JsString("Updated")))
   }
 
-  type FutureOption[A] = OptionT[Future, A]
-  implicit class LiftFutureOption[A](futureOption: Future[Option[A]]) {
-    def ^ : FutureOption[A] = OptionT[Future, A](futureOption)
-  }
-  implicit class LiftOption[A](option: Option[A]) {
-    def ^ : FutureOption[A] = Future.successful(option).^
-  }
-  implicit class LiftFuture[A](future: Future[A]) {
-    def ^ : FutureOption[A] = future.map(Some(_)).^
-  }
-
   def play(): Action[JsValue] = Action.async(parse.tolerantJson) { implicit request: Request[JsValue] =>
     val body = request.body
 
