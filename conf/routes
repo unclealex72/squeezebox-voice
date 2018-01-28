@@ -3,18 +3,5 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-# An example controller showing a sample home page
-
-# Map static resources from the /public folder to the /assets URL path
-POST    /update                 controllers.HomeController.update
-POST    /play                   controllers.HomeController.play
-POST    /token                  controllers.OAuth2Controller.accessToken
-GET     /auth                   controllers.OAuth2Controller.authStart
-POST    /auth-proceed           controllers.OAuth2Controller.authProceed
-
-POST    /users                  controllers.CreateEntityController.createUser
-POST    /clients                controllers.CreateEntityController.createClient
-
-GET     /                       controllers.OAuth2Controller.schema
-
-GET  /assets/*file              controllers.Assets.at(path="/public", file)
+POST    /update                 controllers.UpdateController.update
+POST    /webhook                controllers.WebhookController.webhook

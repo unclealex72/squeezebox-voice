@@ -1,16 +1,17 @@
 package squeezebox
 
+import lexical.{RemovePunctuationService, SynonymService}
+import models.{Album, Artist, Favourite, Room}
 import org.scalatest._
 
-import scala.collection.SortedSet
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 /**
   * Created by alex on 24/12/17
   **/
 class SqueezeCentreImplSpec extends AsyncFlatSpec with Matchers {
 
-  val squeezeCentre = new SqueezeCentreImpl(StaticCommandService, LowerCasingSynonymService)
+  val squeezeCentre = new SqueezeCentreImpl(StaticCommandService, LowerCasingSynonymService, RemoveBracketsOnlyPunctuationService)
 
   behavior of "squeezecentre"
 
@@ -30,34 +31,42 @@ class SqueezeCentreImplSpec extends AsyncFlatSpec with Matchers {
   }
 
   it should "eventually get a list of all known players" in {
-    squeezeCentre.players.map { players =>
+    squeezeCentre.rooms.map { players =>
       players should contain inOrderOnly(
-        Player("80:81:82:83:84:85", "Bedroom"),
-        Player("00:01:02:03:04:05", "Kitchen")
+        Room("80:81:82:83:84:85", "Bedroom", entryOf("Bedroom")),
+        Room("00:01:02:03:04:05", "Kitchen", entryOf("Kitchen"))
       )
     }
   }
 
   it should "eventually get a list of all known favourites" in {
     squeezeCentre.favourites.map { favourites =>
-      favourites should contain only Favourite("ee3fea76.1", "Planet Rock")
+      favourites should contain only Favourite("ee3fea76.1", "Planet Rock", entryOf("Planet Rock"))
     }
   }
 
   it should "eventually list all albums" in {
+    val queen = Artist("Queen", entryOf("Queen"))
+    val thePolice = Artist("The Police", entryOf("The Police"))
     squeezeCentre.albums.map { albums =>
       albums should contain only(
-        Album("A Kind of Magic", "A Kind of Magic", SortedSet("Queen"), Seq("a kind of magic")),
-        Album("A Kind of Magic (Extras)", "A Kind of Magic Extras", SortedSet("Queen"), Seq("a kind of magic (extras)")),
-        Album("A Night at the Opera", "A Night at the Opera", SortedSet("Queen"), Seq("a night at the opera")),
-        Album("Greatest Hits", "Greatest Hits", SortedSet("Queen", "The Police"), Seq("greatest hits"))
+        Album("A Kind of Magic", Seq(queen), entryOf("A Kind of Magic")),
+        Album("A Kind of Magic (Extras)", Seq(queen), entryOf("A Kind of Magic Extras")),
+        Album("A Night at the Opera", Seq(queen), entryOf("A Night at the Opera")),
+        Album("Greatest Hits", Seq(queen, thePolice), entryOf("Greatest Hits"))
       )
     }
   }
+
+  private def entryOf(name: String): models.Entry = models.Entry(name, Seq(name.toLowerCase))
 }
 
 object LowerCasingSynonymService extends SynonymService {
-  override def synonyms(str: String): Seq[String] = Seq(str.toLowerCase)
+  override def apply(str: String): Seq[String] = Seq(str.toLowerCase)
+}
+
+object RemoveBracketsOnlyPunctuationService extends RemovePunctuationService {
+  override def apply(str: String): String = str.replaceAll("""[\(\)]""", "")
 }
 
 object StaticCommandService extends CommandService {

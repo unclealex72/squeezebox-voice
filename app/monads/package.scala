@@ -1,23 +1,33 @@
-import cats.data.OptionT
+import cats.data.{EitherT, NonEmptyList, ValidatedNel}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
   * Created by alex on 30/12/17
+  *
+  * Combined monads.
   **/
 package object monads {
 
-  type FutureOption[A] = OptionT[Future, A]
+  /**
+    * The combined monad for `Future` and `Either`
+    * @tparam L The left hand side type.
+    * @tparam R The right hand side type.
+    */
+  type FutureEither[L, R] = EitherT[Future, L, R]
 
-  implicit class LiftFutureOption[A](futureOption: Future[Option[A]])(implicit ec: ExecutionContext) {
-    def ^ : FutureOption[A] = OptionT[Future, A](futureOption)
+  implicit class FeLiftFutureEither[L, R](futureEither: Future[Either[L, R]])(implicit ec: ExecutionContext) {
+    def > : FutureEither[L, R] = EitherT[Future, L, R](futureEither)
   }
-  implicit class LiftOption[A](option: Option[A])(implicit ec: ExecutionContext) {
-    def ^ : FutureOption[A] = Future.successful(option).^
+  implicit class FeLiftEither[L, R](either: Either[L, R])(implicit ec: ExecutionContext) {
+    def > : FutureEither[L, R] = Future.successful(either).>
   }
-  implicit class LiftFuture[A](future: Future[A])(implicit ec: ExecutionContext) {
-    def ^ : FutureOption[A] = future.map(Some(_)).^
+  implicit class FeLiftFuture[L, R](future: Future[R])(implicit ec: ExecutionContext) {
+    def > : FutureEither[L, R] = future.map(Right(_)).>
+  }
+  implicit class FutureValidateNelLift[L, R](fv: Future[ValidatedNel[L, R]])(implicit ec: ExecutionContext) {
+    def > : FutureEither[NonEmptyList[L], R] = fv.map(_.toEither).>
   }
 
-  implicit def toValue[A](me: FutureOption[A]): Future[Option[A]] = me.value
+  implicit def toValue[L, R](me: FutureEither[L, R]): Future[Either[L, R]] = me.value
 }

@@ -12,7 +12,7 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 /**
   * Created by alex on 23/12/17
   **/
-class SocketCommandService(mediaCentre: MediaCentre)(implicit ec: ExecutionContext) extends CommandService {
+class SocketCommandService(squeezeboxCentre: SqueezeboxCentreLocation)(implicit ec: ExecutionContext) extends CommandService {
   /**
     * Execute a command on the logitech media server.
     *
@@ -20,7 +20,7 @@ class SocketCommandService(mediaCentre: MediaCentre)(implicit ec: ExecutionConte
     * @return The eventual return value of the command.
     */
   override def execute(command: String): Future[String] = Future {
-    val socket = new Socket(mediaCentre.host, mediaCentre.port)
+    val socket = new Socket(squeezeboxCentre.host, squeezeboxCentre.port)
     try {
       val writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream, StandardCharsets.UTF_8.name()))
       writer.write(command)

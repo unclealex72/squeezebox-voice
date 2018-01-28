@@ -1,5 +1,6 @@
 package squeezebox
 
+import lexical.RomanNumeralsServiceImpl
 import org.scalatest._
 
 /**

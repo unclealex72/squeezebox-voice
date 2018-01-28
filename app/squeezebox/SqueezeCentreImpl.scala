@@ -1,7 +1,12 @@
 package squeezebox
 import java.net.{URLDecoder, URLEncoder}
 import java.nio.charset.StandardCharsets
+import java.text.Normalizer
 import javax.inject.Inject
+
+import lexical.{RemovePunctuationService, SynonymService}
+import models._
+import play.api.Logger
 
 import scala.collection.SortedSet
 import scala.concurrent.{ExecutionContext, Future}
@@ -11,9 +16,10 @@ import scala.util.Try
   * The default implementation of ``SqueezeCentre``
   * Created by alex on 24/12/17
   **/
-class SqueezeCentreImpl @Inject() (commandService: CommandService, synonymService: SynonymService)(implicit ec: ExecutionContext) extends SqueezeCentre {
+class SqueezeCentreImpl @Inject()(commandService: CommandService, synonyms: SynonymService, removePunctuation: RemovePunctuationService)(implicit ec: ExecutionContext) extends SqueezeCentre {
 
   def execute(command: String): Future[Seq[(String, String)]] = {
+    Logger.info(command)
     def parse(response: String): Seq[(String, String)] = {
       def splitByColon(str: String): Option[(String, String)] = {
         val maybeFirstColonPosition = Some(str.indexOf(':')).filter(_ != -1)
@@ -33,6 +39,7 @@ class SqueezeCentreImpl @Inject() (commandService: CommandService, synonymServic
     for {
       response <- commandService.execute(command)
     } yield {
+      Logger.info(response)
       parse(response)
     }
   }
@@ -59,23 +66,30 @@ class SqueezeCentreImpl @Inject() (commandService: CommandService, synonymServic
     } yield parseAlbums(response)
   }
 
-  def unpunctuated(str: String): String =
-    str.filter(ch => Character.isLetterOrDigit(ch) || ch == ' ')
-
   def parseAlbums(response: Seq[(String, String)]): Seq[Album] = {
     case class ProtoAlbum(title: String, artist: String)
     val protoAlbums = for {
       map <- toMaps(response, "id")
       title <- map.get("album")
       artist <- map.get("artist")
-    } yield ProtoAlbum(title, artist)
+    } yield {
+      Logger.info(s"Found album $title by $artist")
+      ProtoAlbum(title, artist)
+    }
     protoAlbums.groupBy(_.title).toSeq.map {
       case (title, protos) =>
-        val artists = SortedSet.empty[String] ++ protos.map(_.artist)
-        Album(title, unpunctuated(title), artists, synonymService.synonyms(title))
+        val artists = protos.map { proto =>
+          val artist = proto.artist
+          Artist(artist, entryOf(artist))
+        }
+        Album(title, artists, entryOf(title))
     }
   }
 
+  def entryOf(name: String): Entry = {
+    val unpunctuatedName = removePunctuation(name)
+    Entry(unpunctuatedName, synonyms(unpunctuatedName))
+  }
 
   def toMaps(response: Seq[(String, String)], delimitingKey: String): Seq[Map[String, String]] = {
     case class State(
@@ -108,12 +122,15 @@ class SqueezeCentreImpl @Inject() (commandService: CommandService, synonymServic
     *
     * @return A list of all known players.
     */
-  override def players: Future[SortedSet[Player]] = {
-    executeAndParse[Player]("players 0", "playerindex", _.name) { map =>
+  override def rooms: Future[SortedSet[Room]] = {
+    executeAndParse[Room]("players 0", "playerindex", _.name) { map =>
       for {
         id <- map.get("playerid")
         name <- map.get("name")
-      } yield Player(id, name)
+      } yield {
+        Logger.info(s"Found room $name")
+        Room(id, name, entryOf(name))
+      }
     }
   }
 
@@ -128,7 +145,10 @@ class SqueezeCentreImpl @Inject() (commandService: CommandService, synonymServic
         id <- map.get("id")
         name <- map.get("name")
         isAudio <- map.get("isaudio") if isAudio == "1"
-      } yield Favourite(id, name)
+      } yield {
+        Logger.info(s"Found favourite $name")
+        Favourite(id, name, entryOf(name))
+      }
     }
   }
 
@@ -144,8 +164,8 @@ class SqueezeCentreImpl @Inject() (commandService: CommandService, synonymServic
     * @param artist The artist of the album
     * @return Unit.
     */
-  override def playAlbum(player: Player, album: Album, artist: String): Future[Unit] = {
-    executeAndIgnore(s"${player.id} playlist loadalbum * ${enc(artist)} ${enc(album.title)}")
+  override def playAlbum(player: Room, album: Album, artist: Artist): Future[Unit] = {
+    executeAndIgnore(s"${player.id} playlist loadalbum * ${enc(artist.name)} ${enc(album.title)}")
   }
 
   /**
@@ -155,7 +175,7 @@ class SqueezeCentreImpl @Inject() (commandService: CommandService, synonymServic
     * @param favourite The favourite to play.
     * @return Unit.
     */
-  override def playFavourite(player: Player, favourite: Favourite): Future[Unit] = {
+  override def playFavourite(player: Room, favourite: Favourite): Future[Unit] = {
     executeAndIgnore(s"${player.id} favorites playlist play item_id:${enc(favourite.id)}")
   }
 
