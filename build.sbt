@@ -32,7 +32,7 @@ dockerCommands := {
     Cmd("VOLUME", "/opt/docker/ssl/"))
   prefixCommands ++ extraCommands ++ suffixCommands
 }
-javaOptions in Universal ++= Seq("-Dhttps.port=9443")
+javaOptions in Universal ++= Seq("-Dhttps.port=9443", "-Dhttp.port=disabled")
 
 publish := { (publish in Docker).value }
 
