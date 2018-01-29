@@ -1,9 +1,8 @@
 import com.typesafe.sbt.packager.docker._
+import ReleaseTransformations._
 
 name := """squeezebox-voice"""
 organization := "uk.co.unclealex"
-
-version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, DockerPlugin, AshScriptPlugin)
 
@@ -17,7 +16,7 @@ libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2
 dockerBaseImage := "openjdk:alpine"
 dockerExposedPorts := Seq(9443)
 maintainer := "Alex Jones <alex.jones@unclealex.co.uk>"
-dockerRepository := Some("unclealex72")
+dockerUsername := Some("unclealex72")
 version in Docker := "latest"
 dockerCommands := {
   val commands = dockerCommands.value
@@ -34,3 +33,19 @@ dockerCommands := {
   prefixCommands ++ extraCommands ++ suffixCommands
 }
 javaOptions in Universal ++= Seq("-Dhttps.port=9443")
+
+publish := { (publish in Docker).value }
+
+releaseProcess := Seq[ReleaseStep](
+  checkSnapshotDependencies,              // : ReleaseStep
+  inquireVersions,                        // : ReleaseStep
+  runClean,                               // : ReleaseStep
+  runTest,                                // : ReleaseStep
+  setReleaseVersion,                      // : ReleaseStep
+  commitReleaseVersion,                   // : ReleaseStep, performs the initial git checks
+  tagRelease,                             // : ReleaseStep
+  releaseStepCommand("docker:publish"),   // : ReleaseStep, build server docker image.
+  setNextVersion,                         // : ReleaseStep
+  commitNextVersion,                      // : ReleaseStep
+  pushChanges                             // : ReleaseStep, also checks that an upstream branch is properly configured
+)
