@@ -30,6 +30,13 @@ trait SqueezeCentre {
   def rooms: Future[SortedSet[Room]]
 
   /**
+    * Get the current [[PlaylistInfo]] from a player.
+    * @param room The room the player is in.
+    * @return Eventually the [[PlaylistInfo]] if it can be found or none if it cannot.
+    */
+  def playlistInformation(room: Room): Future[Option[PlaylistInfo]]
+
+  /**
     * Play an album on a player.
     * @param player The player that will play the album.
     * @param album The album to play.
@@ -46,3 +53,11 @@ trait SqueezeCentre {
     */
   def playFavourite(player: Room, favourite: Favourite): Future[Unit]
 }
+
+/**
+  * An object that encapsulates what is currently playing.
+  * @param title The title of the track.
+  * @param maybeArtist The artist, if known.
+  * @param maybeRemoteTitle The remote title of the playlist if it is a remote stream or none otherwise.
+  */
+case class PlaylistInfo(title: String, maybeArtist: Option[String], maybeRemoteTitle: Option[String])

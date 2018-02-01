@@ -6,7 +6,7 @@ import cats.data._
 import cats.implicits._
 import media.MediaCache
 import models.{Album, Artist, Room}
-import squeezebox.SqueezeCentre
+import squeezebox.{NowPlayingService, SqueezeCentre}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -15,15 +15,22 @@ import scala.concurrent.{ExecutionContext, Future}
   *
   * The default implementation of [[WebhookService]]
   **/
-class WebhookServiceImpl @Inject() (squeezeCentre: SqueezeCentre, mediaCache: MediaCache)(implicit ec: ExecutionContext) extends WebhookService {
+class WebhookServiceImpl @Inject() (
+                                     squeezeCentre: SqueezeCentre,
+                                     mediaCache: MediaCache,
+                                     nowPlaying: NowPlayingService)
+                                   (implicit ec: ExecutionContext) extends WebhookService {
 
-  val actions = Map(
-    "play-favourite" -> playFavourite _,
-    "play-album" -> playAlbum _,
-    "provide-required-artist" -> playAlbum _
+  type EventualResponse = Future[ValidatedNel[String, WebhookResponse]]
+
+  val actions: Map[String, (Room, WebhookParameters) => EventualResponse] = Map(
+    "play-favourite" -> playFavourite,
+    "play-album" -> playAlbum,
+    "provide-required-artist" -> playAlbum,
+    "now-playing" -> currentTrack
   )
 
-  override def apply(webhookRequest: WebhookRequest): Future[ValidatedNel[String, WebhookResponse]] = {
+  override def apply(webhookRequest: WebhookRequest): EventualResponse = {
     val actionName = webhookRequest.action
     actions.get(actionName) match {
       case Some(action) => respond(webhookRequest.parameters, action)
@@ -35,7 +42,7 @@ class WebhookServiceImpl @Inject() (squeezeCentre: SqueezeCentre, mediaCache: Me
 
   def respond(
                parameters: WebhookParameters,
-               action: (Room, WebhookParameters) => Future[ValidatedNel[String, WebhookResponse]]): Future[ValidatedNel[String, WebhookResponse]] = {
+               action: (Room, WebhookParameters) => EventualResponse): EventualResponse = {
     parameters.room(mediaCache) match {
       case Valid(room) =>
         squeezeCentre.rooms.flatMap { availableRooms =>
@@ -48,7 +55,7 @@ class WebhookServiceImpl @Inject() (squeezeCentre: SqueezeCentre, mediaCache: Me
     }
   }
 
-  def playFavourite(room: Room, parameters: WebhookParameters): Future[ValidatedNel[String, WebhookResponse]] = {
+  def playFavourite(room: Room, parameters: WebhookParameters): EventualResponse = {
     parameters.favourite(mediaCache) match {
       case Valid(favourite) =>
         squeezeCentre.playFavourite(room, favourite).map { _ =>
@@ -58,7 +65,19 @@ class WebhookServiceImpl @Inject() (squeezeCentre: SqueezeCentre, mediaCache: Me
     }
   }
 
-  def playAlbum(room: Room, parameters: WebhookParameters): Future[ValidatedNel[String, WebhookResponse]] = {
+  def currentTrack(room: Room, parameters: WebhookParameters): EventualResponse = {
+    nowPlaying(room).map {
+      case Some(currentTrack) => {
+        val title = currentTrack.title
+        val artist = currentTrack.artist
+        followup("currently-playing", parameters ++ ("currentTitle" -> title, "currentArtist" -> artist)).validNel
+      }
+      case None =>
+        followup("nothing-playing", parameters).validNel
+    }
+  }
+
+  def playAlbum(room: Room, parameters: WebhookParameters): EventualResponse = {
     case class AlbumAndMaybeArtist(album: Album, maybeArtist: Option[Artist]) {}
     val validatedAlbumAndMaybeArtist: ValidatedNel[String, AlbumAndMaybeArtist] =
       (parameters.album(mediaCache), parameters.maybeArtist(mediaCache)).mapN { AlbumAndMaybeArtist(_, _) }

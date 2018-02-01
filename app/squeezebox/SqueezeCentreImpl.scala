@@ -86,6 +86,22 @@ class SqueezeCentreImpl @Inject()(commandService: CommandService, synonyms: Syno
     }
   }
 
+  override def playlistInformation(room: Room): Future[Option[PlaylistInfo]] = {
+    rooms.flatMap { availableRooms =>
+      if (availableRooms.contains(room)) {
+        execute(s"${room.id} status - 1 tags:Na").map { kvs =>
+          val responseMap = kvs.toMap
+          responseMap.get("title").map { title =>
+            PlaylistInfo(title, responseMap.get("artist"), responseMap.get("remote_title"))
+          }
+        }
+      }
+      else {
+        Future.successful(None)
+      }
+    }
+  }
+
   def entryOf(name: String): Entry = {
     val unpunctuatedName = removePunctuation(name)
     Entry(unpunctuatedName, synonyms(unpunctuatedName))

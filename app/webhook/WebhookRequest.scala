@@ -1,7 +1,5 @@
 package webhook
 
-import media.MediaCache
-
 /**
   * Created by alex on 28/01/18
   *
@@ -11,14 +9,13 @@ case class WebhookRequest(action: String, parameters: WebhookParameters)
 
 object WebhookRequest {
 
-  import play.api.libs.json._
   import play.api.libs.functional.syntax._
-  import WebhookParameters._
+  import play.api.libs.json._
 
   /**
     * Write a webhook request as JSON.
     */
-  implicit def webhookRequestReads(implicit mediaCache: MediaCache): Reads[WebhookRequest] = {
+  implicit val webhookRequestReads: Reads[WebhookRequest] = {
     val result = JsPath \ "result"
     ((result \ "action").read[String] and
       (result \ "parameters").read[WebhookParameters])(WebhookRequest.apply _)

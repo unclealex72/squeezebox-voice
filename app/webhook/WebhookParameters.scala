@@ -29,9 +29,19 @@ case class WebhookParameters(parameters: Map[String, String]) {
   /**
     * Add a parameter
     * @param kv The key value pair to add.
-    * @return
+    * @return A new webhook parameters object with the extra parameter.
     */
-  def +(kv: (String, String)): WebhookParameters = WebhookParameters(parameters + kv)
+  def +(kv: (String, String)): WebhookParameters = ++(kv)
+
+  /**
+    * Add a list of parameters.
+    * @param kv The first key value pair to add.
+    * @param kvs The next key value pairs to add.
+    * @return A new webhook parameters object with the extra parameters.
+    */
+  def ++(kv: (String, String), kvs: (String, String)*): WebhookParameters = {
+    WebhookParameters(parameters ++ (kv +: kvs))
+  }
 
   /**
     * Get the room stored in these parameters.
@@ -66,10 +76,9 @@ object WebhookParameters {
   /**
     * Read parameters from JSON.
     * @param mapReads A reader for reading maps.
-    * @param mediaCache A media cached used to search for entities.
     * @return A reader for reading parameters from JSON.
     */
-  implicit def webhookParametersReads(implicit mapReads: Reads[Map[String, String]], mediaCache: MediaCache): Reads[WebhookParameters] = {
+  implicit def webhookParametersReads(implicit mapReads: Reads[Map[String, String]]): Reads[WebhookParameters] = {
     mapReads.map(WebhookParameters(_))
   }
 

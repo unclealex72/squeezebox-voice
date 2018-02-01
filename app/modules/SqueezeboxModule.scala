@@ -5,7 +5,7 @@ import javax.inject.{Inject, Provider, Singleton}
 import akka.actor.ActorSystem
 import lexical.{RomanNumeralSynonymService, RomanNumeralsService, RomanNumeralsServiceImpl, SynonymService}
 import media.{MapMediaCache, MediaCache, MediaUpdateMediator, MediaUpdateMediatorImpl}
-import play.api.inject.{SimpleModule, _}
+import play.api.inject._
 import squeezebox._
 
 import scala.concurrent.ExecutionContext
@@ -21,7 +21,8 @@ class SqueezeboxModule extends SimpleModule(
   bind[SqueezeCentre].to[SqueezeCentreImpl].eagerly(),
   bind[MediaCache].to[MapMediaCache].eagerly(),
   bind[MediaUpdateMediator].to[MediaUpdateMediatorImpl].eagerly(),
-  bind[CommandService].toProvider[CommandServiceProvider].eagerly()) {
+  bind[CommandService].toProvider[CommandServiceProvider].eagerly(),
+  bind[NowPlayingService].to[NowPlayingServiceImpl].eagerly()) {
 }
 
 @Singleton

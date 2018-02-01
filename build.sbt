@@ -28,8 +28,8 @@ dockerCommands := {
     firstRunCommand + 1
   }
   val extraCommands = Seq(
-    Cmd("RUN", "mkdir", "-p", "/opt/docker/ssl"),
-    Cmd("VOLUME", "/opt/docker/ssl/"))
+    Cmd("RUN", "mkdir", "-p", "/opt/docker/ext"),
+    Cmd("VOLUME", "/opt/docker/ext/"))
   prefixCommands ++ extraCommands ++ suffixCommands
 }
 javaOptions in Universal ++= Seq("-Dhttps.port=9443", "-Dhttp.port=disabled")
