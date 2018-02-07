@@ -7,6 +7,7 @@ organization := "uk.co.unclealex"
 lazy val root = (project in file(".")).enablePlugins(PlayScala, DockerPlugin, AshScriptPlugin)
 
 scalaVersion := "2.12.3"
+scalacOptions += "-target:jvm-1.8"
 
 libraryDependencies += guice
 libraryDependencies += ws
