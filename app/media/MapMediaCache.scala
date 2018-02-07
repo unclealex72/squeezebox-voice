@@ -56,6 +56,17 @@ class MapMediaCache @Inject() (removePunctuation: RemovePunctuationService) exte
     favouriteMap.get(removePunctuation(name).toLowerCase)
   }
 
+
+  /**
+    * List all albums for an artist.
+    *
+    * @param artist The artist to search for.
+    * @return A list of all albums recorded by the artist.
+    */
+  override def listAlbums(artist: Artist): Seq[Album] = {
+    albumMap.values.filter(album => album.artists.contains(artist)).toSeq
+  }
+
   implicit class UniqueGroupingImplicits[V](values: Seq[V]) {
 
     def uniquelyGroupBy(keyBuilder: V => String): Map[String, V] = {

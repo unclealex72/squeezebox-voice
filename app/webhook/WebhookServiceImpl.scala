@@ -23,79 +23,85 @@ class WebhookServiceImpl @Inject() (
 
   type EventualResponse = Future[ValidatedNel[String, WebhookResponse]]
 
-  val actions: Map[String, (Room, WebhookParameters) => EventualResponse] = Map(
-    "play-favourite" -> playFavourite,
-    "play-album" -> playAlbum,
-    "provide-required-artist" -> playAlbum,
-    "now-playing" -> currentTrack
+  import WebhookServiceImplicits._
+
+
+  val actions: Map[String, WebhookParameters => EventualResponse] = Map(
+    "play-favourite" -> withRoom(playFavourite),
+    "play-album" -> withRoom(playAlbum),
+    "provide-required-artist" -> withRoom(playAlbum),
+    "now-playing" -> withRoom(currentTrack),
+    "browse-artist" -> browseArtist
   )
 
   override def apply(webhookRequest: WebhookRequest): EventualResponse = {
     val actionName = webhookRequest.action
     actions.get(actionName) match {
-      case Some(action) => respond(webhookRequest.parameters, action)
+      case Some(action) => action(webhookRequest.parameters)
       case None =>
         Future.successful(s"Received unknown action $actionName".invalidNel)
     }
 
   }
 
-  def respond(
-               parameters: WebhookParameters,
-               action: (Room, WebhookParameters) => EventualResponse): EventualResponse = {
-    parameters.room(mediaCache) match {
-      case Valid(room) =>
-        squeezeCentre.rooms.flatMap { availableRooms =>
-          availableRooms.find(_.name.equalsIgnoreCase(room.name)) match {
-            case Some(theRoom) => action(theRoom, parameters)
-            case None => Future.successful(followup("room-not-connected", parameters).validNel)
-          }
+  def withRoom(action: (Room, WebhookParameters) => EventualResponse)(parameters: WebhookParameters): EventualResponse = {
+    parameters.room(mediaCache) ~> { room =>
+      squeezeCentre.rooms.flatMap { availableRooms =>
+        availableRooms.find(_.name.equalsIgnoreCase(room.name)) match {
+          case Some(theRoom) => action(theRoom, parameters)
+          case None => followup("room-not-connected", parameters)
         }
-      case Invalid(errs) => Future.successful(Invalid(errs))
+      }
     }
   }
 
   def playFavourite(room: Room, parameters: WebhookParameters): EventualResponse = {
-    parameters.favourite(mediaCache) match {
-      case Valid(favourite) =>
-        squeezeCentre.playFavourite(room, favourite).map { _ =>
-          followup("playing-favourite", parameters).validNel
-        }
-      case Invalid(errs) => Future.successful(Invalid(errs))
+    parameters.favourite(mediaCache) ~> { favourite =>
+      squeezeCentre.playFavourite(room, favourite).map { _ =>
+        followup("playing-favourite", parameters)
+      }
     }
   }
 
   def currentTrack(room: Room, parameters: WebhookParameters): EventualResponse = {
     nowPlaying(room).map {
-      case Some(currentTrack) => {
+      case Some(currentTrack) =>
         val title = currentTrack.title
         val artist = currentTrack.artist
-        followup("currently-playing", parameters ++ ("currentTitle" -> title, "currentArtist" -> artist)).validNel
-      }
+        followup("currently-playing", parameters ++ ("currentTitle" -> title, "currentArtist" -> artist))
       case None =>
-        followup("nothing-playing", parameters).validNel
+        followup("nothing-playing", parameters)
     }
   }
 
   def playAlbum(room: Room, parameters: WebhookParameters): EventualResponse = {
     case class AlbumAndMaybeArtist(album: Album, maybeArtist: Option[Artist]) {}
     val validatedAlbumAndMaybeArtist: ValidatedNel[String, AlbumAndMaybeArtist] =
-      (parameters.album(mediaCache), parameters.maybeArtist(mediaCache)).mapN { AlbumAndMaybeArtist(_, _) }
+      (parameters.album(mediaCache), parameters.maybeArtist(mediaCache)).mapN {
+        AlbumAndMaybeArtist(_, _)
+      }
 
-    validatedAlbumAndMaybeArtist match {
-      case Valid(AlbumAndMaybeArtist(album, maybeArtist)) =>
+    validatedAlbumAndMaybeArtist ~> {
+      case AlbumAndMaybeArtist(album, maybeArtist) =>
         val artists = album.artists.toList
         (artists, maybeArtist) match {
-          case (artist :: Nil, None) => playSqueezeboxAlbum(room, album, artist, parameters).map(_.validNel)
+          case (artist :: Nil, None) => playSqueezeboxAlbum(room, album, artist, parameters)
           case (albumArtists, Some(artist)) => if (albumArtists.contains(artist)) {
-            playSqueezeboxAlbum(room, album, artist, parameters).map(_.validNel)
+            playSqueezeboxAlbum(room, album, artist, parameters)
           }
           else {
-            Future.successful(followup("wrong-artist", parameters).validNel)
+            followup("wrong-artist", parameters)
           }
-          case (albumArtists, None) => artistRequired(albumArtists, parameters).map(_.validNel)
+          case (albumArtists, None) => artistRequired(albumArtists, parameters)
         }
-      case Invalid(errs) => Future.successful(Invalid(errs))
+    }
+  }
+
+  def browseArtist(parameters: WebhookParameters): EventualResponse = {
+    parameters.artist(mediaCache) ~> { artist =>
+      val albumNames = mediaCache.listAlbums(artist).map(_.title).sorted
+      val albumList = albumNames.mkString(", ")
+      followup("albums-for-artist", parameters + ("albums" -> albumList))
     }
   }
 
@@ -112,6 +118,35 @@ class WebhookServiceImpl @Inject() (
 
   def followup(event: String, parameters: WebhookParameters, contextNames: Seq[String] = Seq.empty): WebhookResponse = {
     WebhookResponse(event, parameters, contextNames)
+  }
+
+  private object WebhookServiceImplicits {
+
+    implicit class EventualResponseHelpers[A](validatedValue: ValidatedNel[String, A]) {
+      def ~>(eventualFactory: A => EventualResponse): EventualResponse = {
+        validatedValue match {
+          case Valid(a) => eventualFactory(a)
+          case Invalid(errs) => Future.successful(Invalid(errs))
+        }
+      }
+    }
+
+    implicit val response: Future[WebhookResponse] => EventualResponse = { eResponse =>
+      eResponse.map(_.validNel)
+    }
+
+    implicit val eResponse: ValidatedNel[String, WebhookResponse] => EventualResponse = { response =>
+      Future.successful(response)
+    }
+
+    implicit val evResponse: WebhookResponse => EventualResponse = { response =>
+      eResponse(response.validNel)
+    }
+
+    implicit val vResponse: WebhookResponse => ValidatedNel[String, WebhookResponse] = { response =>
+      response.validNel
+    }
+
   }
 
 }

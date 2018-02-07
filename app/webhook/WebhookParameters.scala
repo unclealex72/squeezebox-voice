@@ -63,6 +63,12 @@ case class WebhookParameters(parameters: Map[String, String]) {
 
   /**
     * Get the artist stored in these parameters.
+    * @return The artist or invalid if it cannot be found.
+    */
+  def artist(mediaCache: MediaCache): ValidatedNel[String, Artist] = mandatory("artist", mediaCache.artist)
+
+  /**
+    * Get the artist stored in these parameters.
     * @return If the parameter exists return the artist or invalid if it cannot be found. Otherwise return None.
     */
   def maybeArtist(mediaCache: MediaCache): ValidatedNel[String, Option[Artist]] = optional("artist", mediaCache.artist)

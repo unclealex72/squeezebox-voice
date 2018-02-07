@@ -10,6 +10,7 @@ trait MediaCache {
 
   /**
     * Find the album with the given title.
+    *
     * @param title The title to look for (case insensitive)
     * @return The album with the given title or none.
     */
@@ -28,6 +29,13 @@ trait MediaCache {
     * @return The player with the given name or none.
     */
   def player(name: String): Option[Room]
+
+  /**
+    * List all albums for an artist.
+    * @param artist The artist to search for.
+    * @return A list of all albums recorded by the artist.
+    */
+  def listAlbums(artist: Artist): Seq[Album]
 
   /**
     * Find the favourite with the given name.
