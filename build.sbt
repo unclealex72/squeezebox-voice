@@ -8,6 +8,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, DockerPlugin, As
 
 scalaVersion := "2.12.3"
 scalacOptions += "-target:jvm-1.8"
+javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
 
 libraryDependencies += guice
 libraryDependencies += ws
