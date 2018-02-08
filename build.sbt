@@ -7,12 +7,12 @@ organization := "uk.co.unclealex"
 lazy val root = (project in file(".")).enablePlugins(PlayScala, DockerPlugin, AshScriptPlugin)
 
 scalaVersion := "2.12.3"
-scalacOptions += "-target:jvm-1.8"
+scalacOptions ++= Seq("-target:jvm-1.8", "-Ypartial-unification")
 javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
 
 libraryDependencies += guice
 libraryDependencies += ws
-libraryDependencies += "org.typelevel" %% "cats-core" % "1.0.0-RC2"
+libraryDependencies += "org.typelevel" %% "cats-core" % "1.0.1"
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
 
 dockerBaseImage := "openjdk:alpine"
