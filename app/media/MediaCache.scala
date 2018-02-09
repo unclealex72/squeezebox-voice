@@ -1,6 +1,6 @@
 package media
 
-import models.{Album, Artist, Favourite, Room}
+import models._
 
 /**
   * A cache for all media stored on the media centre.
@@ -45,6 +45,13 @@ trait MediaCache {
   def favourite(name: String): Option[Favourite]
 
   /**
+    * Find the playlist with the given name.
+    * @param name The name to look for (case insensitive)
+    * @return The playlist with the given name or none.
+    */
+  def playlist(name: String): Option[Playlist]
+
+  /**
     * Update the albums.
     * @param albums All known albums.
     */
@@ -68,4 +75,10 @@ trait MediaCache {
     * @param favourites All known favourites.
     */
   def updateFavourites(favourites: Seq[Favourite]): Seq[Favourite]
+
+  /**
+    * Update the playlists.
+    * @param playlists All known playlists.
+    */
+  def updatePlaylists(playlists: Seq[Playlist]): Seq[Playlist]
 }

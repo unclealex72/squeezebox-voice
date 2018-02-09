@@ -3,7 +3,7 @@ package webhook
 import cats.data._
 import cats.implicits._
 import media.MediaCache
-import models.{Album, Artist, Favourite, Room}
+import models._
 
 /**
   * Created by alex on 28/01/18
@@ -54,6 +54,12 @@ case class WebhookParameters(parameters: Map[String, String]) {
     * @return The favourite or invalid if it cannot be found.
     */
   def favourite(mediaCache: MediaCache): ValidatedNel[String, Favourite] = mandatory("favourite", mediaCache.favourite)
+
+  /**
+    * Get the playlist stored in these parameters.
+    * @return The playlist or invalid if it cannot be found.
+    */
+  def playlist(mediaCache: MediaCache): ValidatedNel[String, Playlist] = mandatory("playlist", mediaCache.playlist)
 
   /**
     * Get the album stored in these parameters.

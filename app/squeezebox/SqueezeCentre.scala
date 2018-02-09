@@ -1,6 +1,6 @@
 package squeezebox
 
-import models.{Album, Artist, Favourite, Room}
+import models._
 
 import scala.collection.SortedSet
 import scala.concurrent.{ExecutionContext, Future}
@@ -22,6 +22,12 @@ trait SqueezeCentre {
     * @return A list of all known favourites.
     */
   def favourites: Future[SortedSet[Favourite]]
+
+  /**
+    * Get a list of all known playlists.
+    * @return A list of all known playlists.
+    */
+  def playlists: Future[SortedSet[Playlist]]
 
   /**
     * Get a list of all connected players.
@@ -47,11 +53,19 @@ trait SqueezeCentre {
 
   /**
     * Play a favourite on a player.
-    * @param player The player that will play the album.
+    * @param player The player that will play the favourite.
     * @param favourite The favourite to play.
     * @return Unit.
     */
   def playFavourite(player: Room, favourite: Favourite): Future[Unit]
+
+  /**
+    * Play a playlist on a player.
+    * @param player The player that will play the playlist.
+    * @param playlist The playlist to play.
+    * @return Unit.
+    */
+  def playPlaylist(player: Room, playlist: Playlist): Future[Unit]
 }
 
 /**

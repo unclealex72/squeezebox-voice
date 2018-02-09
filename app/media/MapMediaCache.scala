@@ -3,7 +3,7 @@ package media
 import javax.inject.Inject
 
 import lexical.RemovePunctuationService
-import models.{Album, Artist, Favourite, Room}
+import models._
 
 /**
   * A [[MediaCache]] that uses volatile hash maps.
@@ -15,6 +15,7 @@ class MapMediaCache @Inject() (removePunctuation: RemovePunctuationService) exte
   @volatile var artistMap: Map[String, Artist] = Map.empty
   @volatile var roomMap: Map[String, Room] = Map.empty
   @volatile var favouriteMap: Map[String, Favourite] = Map.empty
+  @volatile var playlistMap: Map[String, Playlist] = Map.empty
 
   /**
     * Find the album with the given title.
@@ -56,6 +57,15 @@ class MapMediaCache @Inject() (removePunctuation: RemovePunctuationService) exte
     favouriteMap.get(removePunctuation(name).toLowerCase)
   }
 
+  /**
+    * Find the playlist with the given name.
+    *
+    * @param name The name to look for (case insensitive)
+    * @return The playlist with the given name or none.
+    */
+  override def playlist(name: String): Option[Playlist] = {
+    playlistMap.get(removePunctuation(name).toLowerCase)
+  }
 
   /**
     * List all albums for an artist.
@@ -115,5 +125,15 @@ class MapMediaCache @Inject() (removePunctuation: RemovePunctuationService) exte
   override def updateFavourites(favourites: Seq[Favourite]): Seq[Favourite] = {
     favouriteMap = favourites.uniquelyGroupBy(_.entry.unpunctuated.toLowerCase)
     favourites
+  }
+
+  /**
+    * Update the playlists.
+    *
+    * @param playlists All known playlists.
+    */
+  override def updatePlaylists(playlists: Seq[Playlist]): Seq[Playlist] = {
+    playlistMap = playlists.uniquelyGroupBy(_.entry.unpunctuated.toLowerCase)
+    playlists
   }
 }

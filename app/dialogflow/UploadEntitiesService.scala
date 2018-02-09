@@ -1,6 +1,6 @@
 package dialogflow
 
-import models.{Album, Artist, Favourite, Room}
+import models._
 
 import scala.concurrent.Future
 
@@ -31,6 +31,13 @@ trait UploadEntitiesService {
     * @return
     */
   def uploadFavourites(favourites: Seq[Favourite]): Future[Unit]
+
+  /**
+    * Upload all playlists.
+    * @param playlists The playlists to upload.
+    * @return
+    */
+  def uploadPlaylists(playlists: Seq[Playlist]): Future[Unit]
 
   /**
     * Upload all rooms.

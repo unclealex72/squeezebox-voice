@@ -156,7 +156,7 @@ class SqueezeCentreImpl @Inject()(commandService: CommandService, synonyms: Syno
     * @return A list of all known favourites.
     */
   override def favourites: Future[SortedSet[Favourite]] = {
-    executeAndParse[Favourite]("favorites items 0 200 tags:name", "id", _.name) { map =>
+    executeAndParse[Favourite]("favorites items 0 99999999 tags:name", "id", _.name) { map =>
       for {
         id <- map.get("id")
         name <- map.get("name")
@@ -164,6 +164,24 @@ class SqueezeCentreImpl @Inject()(commandService: CommandService, synonyms: Syno
       } yield {
         Logger.info(s"Found favourite $name")
         Favourite(id, name, entryOf(name))
+      }
+    }
+  }
+
+  /**
+    * Get a list of all known playlists.
+    *
+    * @return A list of all known playlists.
+    */
+  override def playlists: Future[SortedSet[Playlist]] = {
+    executeAndParse[Playlist]("playlists 0 99999999 tags:u", "id", _.name) { map =>
+      for {
+        id <- map.get("id")
+        name <- map.get("playlist")
+        url <- map.get("url")
+      } yield {
+        Logger.info(s"Found playlist $name")
+        Playlist(id, name, url, entryOf(name))
       }
     }
   }
@@ -193,6 +211,17 @@ class SqueezeCentreImpl @Inject()(commandService: CommandService, synonyms: Syno
     */
   override def playFavourite(player: Room, favourite: Favourite): Future[Unit] = {
     executeAndIgnore(s"${player.id} favorites playlist play item_id:${enc(favourite.id)}")
+  }
+
+  /**
+    * Play a playlist on a player.
+    *
+    * @param player    The player that will play the album.
+    * @param playlist The playlist to play.
+    * @return Unit.
+    */
+  override def playPlaylist(player: Room, playlist: Playlist): Future[Unit] = {
+    executeAndIgnore(s"${player.id} playlist play ${enc(playlist.url)} ${enc(playlist.name)}")
   }
 
   def enc(str: String): String =

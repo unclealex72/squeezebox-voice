@@ -28,6 +28,10 @@ class UploadEntitiesServiceImpl @Inject() (ws: WSClient, @DialogFlowToken author
     uploadEntity[Favourite]("favourite", favourites, _.entry)
   }
 
+  override def uploadPlaylists(playlists: Seq[Playlist]): Future[Unit] = {
+    uploadEntity[Playlist]("playlist", playlists, _.entry)
+  }
+
   override def uploadRooms(rooms: Seq[Room]): Future[Unit] = {
     uploadEntity[Room]("room", rooms, _.entry)
   }

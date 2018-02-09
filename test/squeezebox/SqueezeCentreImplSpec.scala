@@ -103,8 +103,8 @@ class StaticCommandService(maybePlaylist: Option[String]) extends CommandService
         |model%3Asqueezebox3 modelname%3ASqueezebox%20Classic power%3A1 isplaying%3A0 displaytype%3Agraphic-320x32
         |isplayer%3A1 canpoweroff%3A1 connected%3A1 firmware%3A137""".stripMargin,
     "albums" -> "albums   count%3A5",
-    "favorites items 0 200 tags:name" ->
-      """favorites items 0 200 tags%3Aname title%3AFavorites
+    "favorites items 0 99999999 tags:name" ->
+      """favorites items 0 99999999 tags%3Aname title%3AFavorites
         |id%3Aee3fea76.0 name%3AOn%20mysqueezebox.com isaudio%3A0 hasitems%3A1
         |id%3Aee3fea76.1 name%3APlanet%20Rock type%3Aaudio isaudio%3A1 hasitems%3A0 count%3A2""".stripMargin,
     "albums 0 5 tags:la" ->

@@ -28,6 +28,7 @@ class WebhookServiceImpl @Inject() (
 
   val actions: Map[String, WebhookParameters => EventualResponse] = Map(
     "play-favourite" -> withRoom(playFavourite),
+    "play-playlist" -> withRoom(playPlaylist),
     "play-album" -> withRoom(playAlbum),
     "provide-required-artist" -> withRoom(playAlbum),
     "now-playing" -> withRoom(currentTrack),
@@ -44,7 +45,7 @@ class WebhookServiceImpl @Inject() (
 
   }
 
-  def withRoom(action: (Room, WebhookParameters) => EventualResponse)(parameters: WebhookParameters): EventualResponse = {
+  implicit def withRoom(action: (Room, WebhookParameters) => EventualResponse)(parameters: WebhookParameters): EventualResponse = {
     parameters.room(mediaCache) ~> { room =>
       squeezeCentre.rooms.flatMap { availableRooms =>
         availableRooms.find(_.name.equalsIgnoreCase(room.name)) match {
@@ -59,6 +60,14 @@ class WebhookServiceImpl @Inject() (
     parameters.favourite(mediaCache) ~> { favourite =>
       squeezeCentre.playFavourite(room, favourite).map { _ =>
         followup("playing-favourite", parameters)
+      }
+    }
+  }
+
+  def playPlaylist(room: Room, parameters: WebhookParameters): EventualResponse = {
+    parameters.playlist(mediaCache) ~> { playlist =>
+      squeezeCentre.playPlaylist(room, playlist).map { _ =>
+        followup("playing-playlist", parameters)
       }
     }
   }
