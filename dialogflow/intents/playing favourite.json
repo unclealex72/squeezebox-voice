@@ -1,0 +1,52 @@
+{
+  "id": "f879b96b-0cd2-40f8-935a-e1f7c49c2993",
+  "name": "playing favourite",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "action": "",
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "fecbc66b-f909-4b96-a7cc-6b58e84cf8e4",
+          "required": true,
+          "dataType": "@favourite",
+          "name": "favourite",
+          "value": "#playing-favourite.favourite",
+          "isList": false
+        },
+        {
+          "id": "2ac31f3b-498c-4117-a3c2-24799fdc2251",
+          "required": true,
+          "dataType": "@room",
+          "name": "room",
+          "value": "#playing-favourite.room",
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": "Playing favourite $favourite in the $room"
+        }
+      ],
+      "defaultResponsePlatforms": {
+        "google": false
+      },
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1517051850,
+  "fallbackIntent": false,
+  "events": [
+    {
+      "name": "playing-favourite"
+    }
+  ]
+}

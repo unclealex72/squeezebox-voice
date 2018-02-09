@@ -1,0 +1,38 @@
+{
+  "id": "9e36361b-eb9c-4730-bad7-a4f03fab7051",
+  "name": "browse artist @artist:artist ",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "action": "browse-artist",
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "c1e5d675-5d4b-4301-820b-cddfa5112f5f",
+          "required": true,
+          "dataType": "@artist",
+          "name": "artist",
+          "value": "$artist",
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": []
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": true,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1518028386,
+  "fallbackIntent": false,
+  "events": []
+}

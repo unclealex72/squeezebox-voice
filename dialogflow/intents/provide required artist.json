@@ -1,0 +1,59 @@
+{
+  "id": "8afe8be2-ed97-44c1-8e6b-c7f1dd43151e",
+  "name": "provide required artist",
+  "auto": true,
+  "contexts": [
+    "artist-required-context"
+  ],
+  "responses": [
+    {
+      "resetContexts": false,
+      "action": "provide-required-artist",
+      "affectedContexts": [
+        {
+          "name": "artist-required-context",
+          "parameters": {},
+          "lifespan": 1
+        }
+      ],
+      "parameters": [
+        {
+          "id": "5c9f0d01-071c-4dc4-80fa-123b7bdd238e",
+          "required": false,
+          "dataType": "@artist",
+          "name": "artist",
+          "value": "$artist",
+          "isList": false
+        },
+        {
+          "id": "d0a15299-8f93-4e95-88fe-25c0697e7a83",
+          "required": false,
+          "dataType": "@room",
+          "name": "room",
+          "value": "#artist-required-context.room"
+        },
+        {
+          "id": "bb1927f3-ec21-43b0-9094-be34c8211e60",
+          "dataType": "@album",
+          "name": "album",
+          "value": "#artist-required-context.album"
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": []
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": true,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1517076383,
+  "fallbackIntent": false,
+  "events": []
+}

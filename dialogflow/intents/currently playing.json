@@ -1,0 +1,57 @@
+{
+  "id": "c98dd49a-fa3a-4eff-9445-790d0b035955",
+  "name": "currently playing",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "002fefc1-8d8f-4a49-a301-1ce2ce3db96d",
+          "required": true,
+          "dataType": "@room",
+          "name": "room",
+          "value": "#currently-playing.room",
+          "isList": false
+        },
+        {
+          "id": "8d83ebf0-869e-4172-a346-7d21cee62add",
+          "required": true,
+          "dataType": "@sys.any",
+          "name": "currentTitle",
+          "value": "#currently-playing.currentTitle",
+          "isList": false
+        },
+        {
+          "id": "b3492f99-4d93-4e0e-b61a-3d2e5fc1df92",
+          "required": true,
+          "dataType": "@sys.any",
+          "name": "currentArtist",
+          "value": "#currently-playing.currentArtist",
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": "$currentTitle by $currentArtist"
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1517434243,
+  "fallbackIntent": false,
+  "events": [
+    {
+      "name": "currently-playing"
+    }
+  ]
+}

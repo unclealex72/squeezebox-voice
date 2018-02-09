@@ -1,0 +1,51 @@
+{
+  "description": "Talk to a squeezebox server",
+  "language": "en",
+  "disableInteractionLogs": false,
+  "googleAssistant": {
+    "googleAssistantCompatible": true,
+    "project": "squeezebox-d8e9c",
+    "welcomeIntentSignInRequired": true,
+    "startIntents": [
+      {
+        "intentId": "a4250e42-c29e-4927-b4cf-ee75a1af9fd1",
+        "signInRequired": true
+      }
+    ],
+    "systemIntents": [],
+    "endIntentIds": [
+      "f879b96b-0cd2-40f8-935a-e1f7c49c2993",
+      "ac348922-fff7-48c7-a36f-d12233bcf14f",
+      "96c7187b-5192-485d-9bde-62ccde628962",
+      "c98dd49a-fa3a-4eff-9445-790d0b035955",
+      "f0669d9e-a6ac-4c8d-bf15-ecb1821f0104",
+      "193eaf28-fbdc-4df0-b343-224d231f75d0",
+      "fd87c2a1-ebe2-430d-ac46-86963cda5536"
+    ],
+    "oAuthLinking": {
+      "required": false,
+      "grantType": "AUTH_CODE_GRANT"
+    },
+    "voiceType": "MALE_1",
+    "capabilities": [],
+    "protocolVersion": "V2",
+    "autoPreviewEnabled": true
+  },
+  "defaultTimezone": "Africa/Casablanca",
+  "webhook": {
+    "url": "https://hurst.myqnapcloud.com/webhook",
+    "headers": {
+      "Authorization": "Bearer DACEB657E0DE4116BBE53DE479C95525",
+      "": ""
+    },
+    "available": true,
+    "useForDomains": true,
+    "cloudFunctionsEnabled": false,
+    "cloudFunctionsInitialized": false
+  },
+  "isPrivate": true,
+  "customClassifierMode": "use.after",
+  "mlMinConfidence": 0.3,
+  "supportedLanguages": [],
+  "enableOnePlatformApi": false
+}

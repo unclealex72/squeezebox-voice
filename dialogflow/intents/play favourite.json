@@ -1,0 +1,52 @@
+{
+  "id": "35e10548-59f3-4fc2-98d5-45f91ada4572",
+  "name": "play favourite",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "action": "play-favourite",
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "e44b9867-403c-492a-bdff-5a12779a010d",
+          "required": true,
+          "dataType": "@favourite",
+          "name": "favourite",
+          "value": "$favourite",
+          "isList": false
+        },
+        {
+          "id": "c230c4c6-b459-45a3-a5e9-de7d0c0ef040",
+          "required": true,
+          "dataType": "@room",
+          "name": "room",
+          "value": "$room",
+          "prompts": [
+            {
+              "lang": "en",
+              "value": "What room are you in?"
+            }
+          ],
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": []
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": true,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1514311907,
+  "fallbackIntent": false,
+  "events": []
+}

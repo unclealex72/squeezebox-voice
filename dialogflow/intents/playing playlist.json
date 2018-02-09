@@ -1,0 +1,49 @@
+{
+  "id": "fd87c2a1-ebe2-430d-ac46-86963cda5536",
+  "name": "playing playlist",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "013aaade-211b-4b45-b3fa-ff46e144b7d4",
+          "required": true,
+          "dataType": "@playlist",
+          "name": "playlist",
+          "value": "#playing-playlist.playlist",
+          "isList": false
+        },
+        {
+          "id": "fd791436-b7f5-41dd-aace-2c6d71d82dfc",
+          "required": true,
+          "dataType": "@room",
+          "name": "room",
+          "value": "#playing-playlist.room",
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": "Playing playlist $playlist in the $room"
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1518157333,
+  "fallbackIntent": false,
+  "events": [
+    {
+      "name": "playing-playlist"
+    }
+  ]
+}

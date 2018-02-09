@@ -1,0 +1,64 @@
+{
+  "id": "eb0c5ef9-4572-413a-8b72-25c41693be13",
+  "name": "artist required",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "action": "artist-required",
+      "affectedContexts": [
+        {
+          "name": "artist-required-context",
+          "parameters": {},
+          "lifespan": 2
+        }
+      ],
+      "parameters": [
+        {
+          "id": "92c73a11-54bb-4c54-8370-8e50868f3c6c",
+          "required": true,
+          "dataType": "@artist",
+          "name": "artists",
+          "value": "#artist-required.artists",
+          "isList": false
+        },
+        {
+          "id": "32468573-8172-4500-8c84-876df5b1bb3f",
+          "required": true,
+          "dataType": "@album",
+          "name": "album",
+          "value": "#artist-required.album",
+          "isList": false
+        },
+        {
+          "id": "3b562800-e438-4853-95fe-3b9db665ae6b",
+          "required": true,
+          "dataType": "@room",
+          "name": "room",
+          "value": "#artist-required.room",
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": "Please choose one of $artists"
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1517071035,
+  "fallbackIntent": false,
+  "events": [
+    {
+      "name": "artist-required"
+    }
+  ]
+}

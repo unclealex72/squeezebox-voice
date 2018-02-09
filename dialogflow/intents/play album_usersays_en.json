@@ -1,0 +1,14 @@
+[
+  {
+    "id": "16e4044c-c312-42e7-81fa-444ba46cc9f7",
+    "data": [
+      {
+        "text": "play album @album:album by @artist:artist in the @room:room",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": true,
+    "count": 0,
+    "updated": 1514225128
+  }
+]

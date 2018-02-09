@@ -1,0 +1,47 @@
+{
+  "id": "5a2fa659-6a57-4e7a-8d0f-0bba0cb7ab66",
+  "name": "wrong artist",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "6821a3d8-c98a-40ca-ab7a-0c8e35458141",
+          "required": true,
+          "dataType": "@album",
+          "name": "album",
+          "value": "#wrong-artist.album"
+        },
+        {
+          "id": "c7612e80-c338-48c8-876c-e638741251e2",
+          "required": true,
+          "dataType": "@album",
+          "name": "artist",
+          "value": "#wrong-artist.artist"
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": "I can\u0027t find an album called $album by $artist"
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1517070637,
+  "fallbackIntent": false,
+  "events": [
+    {
+      "name": "wrong-artist"
+    }
+  ]
+}

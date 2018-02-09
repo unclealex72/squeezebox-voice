@@ -1,0 +1,14 @@
+[
+  {
+    "id": "574a4d38-7f4e-40f9-a653-df6173fcf777",
+    "data": [
+      {
+        "text": "play @playlist:playlist in the @room:room",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": true,
+    "count": 0,
+    "updated": 1518117312
+  }
+]

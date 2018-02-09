@@ -1,0 +1,50 @@
+{
+  "id": "f4a099a9-9a50-4ef6-a043-7b226efd1285",
+  "name": "play playlist",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "action": "play-playlist",
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "a1fa22d4-9416-4ec6-ae90-7aa1d3e92194",
+          "required": true,
+          "dataType": "@playlist",
+          "name": "playlist",
+          "value": "$playlist"
+        },
+        {
+          "id": "351f955e-6549-4d67-81fd-d9517e43f158",
+          "required": true,
+          "dataType": "@room",
+          "name": "room",
+          "value": "$room",
+          "prompts": [
+            {
+              "lang": "en",
+              "value": "What room are you in?"
+            }
+          ]
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": []
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": true,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1518117312,
+  "fallbackIntent": false,
+  "events": []
+}

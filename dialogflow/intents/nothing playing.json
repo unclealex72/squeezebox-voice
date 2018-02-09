@@ -1,0 +1,41 @@
+{
+  "id": "f0669d9e-a6ac-4c8d-bf15-ecb1821f0104",
+  "name": "nothing playing",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "ca4384ae-f02d-4b52-a660-fa61df8e8c72",
+          "required": true,
+          "dataType": "@room",
+          "name": "room",
+          "value": "#currently-playing.room",
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": "Nothing is currently playing in the $room"
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1517434458,
+  "fallbackIntent": false,
+  "events": [
+    {
+      "name": "nothing-playing"
+    }
+  ]
+}

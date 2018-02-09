@@ -1,0 +1,40 @@
+{
+  "id": "ac348922-fff7-48c7-a36f-d12233bcf14f",
+  "name": "room not connected",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "599b0375-4aba-4fae-8e27-e64546f026bf",
+          "required": true,
+          "dataType": "@room",
+          "name": "room",
+          "value": "#room-not-connected.room"
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": "I\u0027m sorry, but the squeezebox player in the $room is currently unavailable"
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1517056770,
+  "fallbackIntent": false,
+  "events": [
+    {
+      "name": "room-not-connected"
+    }
+  ]
+}

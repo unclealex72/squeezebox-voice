@@ -1,0 +1,32 @@
+{
+  "id": "193eaf28-fbdc-4df0-b343-224d231f75d0",
+  "name": "albums for artist",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": "Artist #albums-for-artist.artist has recorded the following albums: #albums-for-artist.albums"
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1517764238,
+  "fallbackIntent": false,
+  "events": [
+    {
+      "name": "albums-for-artist"
+    }
+  ]
+}

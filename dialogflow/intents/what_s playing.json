@@ -1,0 +1,39 @@
+{
+  "id": "3ba79799-fe29-4204-90a8-e8d107c465fb",
+  "name": "what\u0027s playing",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "action": "now-playing",
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "f53ed96a-9bfc-4702-90ca-7bd607712253",
+          "required": true,
+          "dataType": "@room",
+          "name": "room",
+          "value": "$room",
+          "prompts": [],
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": []
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": true,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1517434149,
+  "fallbackIntent": false,
+  "events": []
+}

@@ -1,0 +1,60 @@
+{
+  "id": "a4250e42-c29e-4927-b4cf-ee75a1af9fd1",
+  "name": "play album",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "action": "play-album",
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "e1217f09-b15c-460f-bbf1-b24abb4ad7f4",
+          "required": true,
+          "dataType": "@album",
+          "name": "album",
+          "value": "$album",
+          "isList": false
+        },
+        {
+          "id": "f1f10e8a-f3ea-4f57-b209-663b39c7fc8b",
+          "required": true,
+          "dataType": "@room",
+          "name": "room",
+          "value": "$room",
+          "prompts": [
+            {
+              "lang": "en",
+              "value": "What room are you in?"
+            }
+          ],
+          "isList": false
+        },
+        {
+          "id": "0a918835-63cb-497f-a3d1-9e6916d60a58",
+          "required": false,
+          "dataType": "@artist",
+          "name": "artist",
+          "value": "$artist",
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": []
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": true,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1514225128,
+  "fallbackIntent": false,
+  "events": []
+}
