@@ -1,0 +1,35 @@
+{
+  "id": "684cf422-75a9-471d-bb45-e57a67757c7b",
+  "name": "updating",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": [
+            "Okay. Updating all media",
+            "Okay. Synchronising."
+          ]
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "lastUpdate": 1518289515,
+  "fallbackIntent": false,
+  "events": [
+    {
+      "name": "updating"
+    }
+  ]
+}

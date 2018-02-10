@@ -4,7 +4,7 @@ import javax.inject.Inject
 import cats.data.Validated._
 import cats.data._
 import cats.implicits._
-import media.MediaCache
+import media.{MediaCache, MediaUpdateMediator}
 import models.{Album, Artist, Room}
 import squeezebox.{NowPlayingService, SqueezeCentre}
 
@@ -18,7 +18,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class WebhookServiceImpl @Inject() (
                                      squeezeCentre: SqueezeCentre,
                                      mediaCache: MediaCache,
-                                     nowPlaying: NowPlayingService)
+                                     nowPlaying: NowPlayingService,
+                                     mediaUpdateMediator: MediaUpdateMediator)
                                    (implicit ec: ExecutionContext) extends WebhookService {
 
   type EventualResponse = Future[ValidatedNel[String, WebhookResponse]]
@@ -32,7 +33,8 @@ class WebhookServiceImpl @Inject() (
     "play-album" -> withRoom(playAlbum),
     "provide-required-artist" -> withRoom(playAlbum),
     "now-playing" -> withRoom(currentTrack),
-    "browse-artist" -> browseArtist
+    "browse-artist" -> browseArtist,
+    "update" -> update
   )
 
   override def apply(webhookRequest: WebhookRequest): EventualResponse = {
@@ -123,6 +125,11 @@ class WebhookServiceImpl @Inject() (
   def artistRequired(albumArtists: Seq[Artist], parameters: WebhookParameters): Future[WebhookResponse] = Future.successful {
     val artistNames = albumArtists.map(_.name).sorted.mkString(", ")
     followup("artist-required", parameters + ("artists" -> artistNames), Seq("artist-required-context"))
+  }
+
+  def update(parameters: WebhookParameters): EventualResponse = {
+    mediaUpdateMediator.update
+    followup("updating", parameters)
   }
 
   def followup(event: String, parameters: WebhookParameters, contextNames: Seq[String] = Seq.empty): WebhookResponse = {
