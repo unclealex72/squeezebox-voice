@@ -16,33 +16,33 @@ trait UploadEntitiesService {
     * @param albums The albums to upload.
     * @return
     */
-  def uploadAlbums(albums: Seq[Album]): Future[Unit]
+  def uploadAlbums(albums: Set[Album]): Future[Unit]
 
   /**
     * Upload all artists.
     * @param artists The artists to upload.
     * @return
     */
-  def uploadArtists(artists: Seq[Artist]): Future[Unit]
+  def uploadArtists(artists: Set[Artist]): Future[Unit]
 
   /**
     * Upload all favourites.
     * @param favourites The favourites to upload.
     * @return
     */
-  def uploadFavourites(favourites: Seq[Favourite]): Future[Unit]
+  def uploadFavourites(favourites: Set[Favourite]): Future[Unit]
 
   /**
     * Upload all playlists.
     * @param playlists The playlists to upload.
     * @return
     */
-  def uploadPlaylists(playlists: Seq[Playlist]): Future[Unit]
+  def uploadPlaylists(playlists: Set[Playlist]): Future[Unit]
 
   /**
     * Upload all rooms.
     * @param room The rooms to upload.
     * @return
     */
-  def uploadRooms(room: Seq[Room]): Future[Unit]
+  def uploadRooms(room: Set[Room]): Future[Unit]
 }

@@ -5,7 +5,7 @@ import javax.inject.Inject
 import models._
 import modules.DialogFlowToken
 import play.api.libs.json._
-import play.api.libs.ws.WSClient
+import play.api.libs.ws.{WSClient, WSRequest}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -16,23 +16,23 @@ import scala.concurrent.{ExecutionContext, Future}
   **/
 class UploadEntitiesServiceImpl @Inject() (ws: WSClient, @DialogFlowToken authorisationToken: String)(implicit ec: ExecutionContext) extends UploadEntitiesService {
 
-  override def uploadAlbums(albums: Seq[Album]): Future[Unit] = {
+  override def uploadAlbums(albums: Set[Album]): Future[Unit] = {
     uploadEntity[Album]("album", albums, _.entry)
   }
 
-  override def uploadArtists(artists: Seq[Artist]): Future[Unit] = {
+  override def uploadArtists(artists: Set[Artist]): Future[Unit] = {
     uploadEntity[Artist]("artist", artists, _.entry)
   }
 
-  override def uploadFavourites(favourites: Seq[Favourite]): Future[Unit] = {
+  override def uploadFavourites(favourites: Set[Favourite]): Future[Unit] = {
     uploadEntity[Favourite]("favourite", favourites, _.entry)
   }
 
-  override def uploadPlaylists(playlists: Seq[Playlist]): Future[Unit] = {
+  override def uploadPlaylists(playlists: Set[Playlist]): Future[Unit] = {
     uploadEntity[Playlist]("playlist", playlists, _.entry)
   }
 
-  override def uploadRooms(rooms: Seq[Room]): Future[Unit] = {
+  override def uploadRooms(rooms: Set[Room]): Future[Unit] = {
     uploadEntity[Room]("room", rooms, _.entry)
   }
 
@@ -45,18 +45,18 @@ class UploadEntitiesServiceImpl @Inject() (ws: WSClient, @DialogFlowToken author
     * @tparam A The type of `values`
     * @return
     */
-  def uploadEntity[A](name: String, values: Seq[A], builder: A => Entry): Future[Unit] = {
+  def uploadEntity[A](name: String, values: Set[A], builder: A => Entry): Future[Unit] = {
     def alterEntity[J <: JsValue](method: String, isEntries: Boolean, maybeBody: Option[JsValue] = None)(implicit reads: Reads[J]): Future[J] = {
       val url = (Seq(
         "https://api.dialogflow.com/v1/entities", name
       ) ++ Some("entries").filter(_ => isEntries)).mkString("/")
-      val bodilessRequest = ws.url(url).
+      val bodilessRequest: WSRequest = ws.url(url).
         addQueryStringParameters("v" -> "20150910").
         addHttpHeaders(
           "Authorization" -> s"Bearer $authorisationToken",
           "Content-Type" -> "application/json").
         withMethod(method)
-      val request = maybeBody.foldLeft(bodilessRequest)(_.withBody(_))
+      val request: WSRequest = maybeBody.foldLeft(bodilessRequest)(_.withBody(_))
       request.execute().map { response =>
         if (response.status == 200) {
           response.body[JsValue].as[J]
@@ -72,8 +72,8 @@ class UploadEntitiesServiceImpl @Inject() (ws: WSClient, @DialogFlowToken author
     def deleteEntries(entries: Seq[String]): Future[JsValue] =
       alterEntity[JsValue]("DELETE", isEntries = true, Some(JsArray(entries.map(JsString))))
     def addEntries(): Future[JsValue] =
-      alterEntity[JsValue]("PUT", isEntries = true, Some(JsArray(values.map(builder).map { entry  =>
-        val synonyms = entry.synonyms :+ entry.unpunctuated
+      alterEntity[JsValue]("PUT", isEntries = true, Some(JsArray(values.toSeq.map(builder).map { entry  =>
+        val synonyms: Seq[String] = entry.synonyms :+ entry.unpunctuated
         Json.obj("value" -> JsString(entry.unpunctuated), "synonyms" -> JsArray(synonyms.map(JsString)))
       })))
     for {

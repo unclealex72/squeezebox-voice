@@ -4,20 +4,21 @@ import javax.inject.Inject
 import cats.data.Validated._
 import cats.data._
 import cats.implicits._
-import media.{MediaCache, MediaUpdateMediator}
+import media.{MediaCacheView, MediaUpdateMediator}
 import models.{Album, Artist, Room}
-import squeezebox.{NowPlayingService, SqueezeCentre}
+import squeezebox.{NowPlayingService, MusicPlayer}
 
 import scala.concurrent.{ExecutionContext, Future}
-
+import Action._
+import Event._
 /**
   * Created by alex on 28/01/18
   *
   * The default implementation of [[WebhookService]]
   **/
 class WebhookServiceImpl @Inject() (
-                                     squeezeCentre: SqueezeCentre,
-                                     mediaCache: MediaCache,
+                                     musicPlayer: MusicPlayer,
+                                     mediaCacheView: MediaCacheView,
                                      nowPlaying: NowPlayingService,
                                      mediaUpdateMediator: MediaUpdateMediator)
                                    (implicit ec: ExecutionContext) extends WebhookService {
@@ -26,50 +27,49 @@ class WebhookServiceImpl @Inject() (
 
   import WebhookServiceImplicits._
 
-
-  val actions: Map[String, WebhookParameters => EventualResponse] = Map(
-    "play-favourite" -> withRoom(playFavourite),
-    "play-playlist" -> withRoom(playPlaylist),
-    "play-album" -> withRoom(playAlbum),
-    "provide-required-artist" -> withRoom(playAlbum),
-    "now-playing" -> withRoom(currentTrack),
-    "browse-artist" -> browseArtist,
-    "update" -> update
+  val actions: Map[Action, WebhookParameters => EventualResponse] = Map(
+    PlayFavourite -> withRoom(playFavourite),
+    PlayPlaylist -> withRoom(playPlaylist),
+    PlayAlbum -> withRoom(playAlbum),
+    ProvideRequiredArtist -> withRoom(playAlbum),
+    NowPlaying -> withRoom(currentTrack),
+    BrowseArtist -> browseArtist,
+    Update -> update
   )
 
   override def apply(webhookRequest: WebhookRequest): EventualResponse = {
-    val actionName = webhookRequest.action
-    actions.get(actionName) match {
-      case Some(action) => action(webhookRequest.parameters)
+    val action: Action = webhookRequest.action
+    actions.get(action) match {
+      case Some(factory) => factory(webhookRequest.parameters)
       case None =>
-        Future.successful(s"Received unknown action $actionName".invalidNel)
+        Future.successful(s"Received unknown action ${action.action}".invalidNel)
     }
 
   }
 
   implicit def withRoom(action: (Room, WebhookParameters) => EventualResponse)(parameters: WebhookParameters): EventualResponse = {
-    parameters.room(mediaCache) ~> { room =>
-      squeezeCentre.rooms.flatMap { availableRooms =>
+    parameters.room(mediaCacheView) ~> { room =>
+      musicPlayer.rooms().flatMap { availableRooms =>
         availableRooms.find(_.name.equalsIgnoreCase(room.name)) match {
           case Some(theRoom) => action(theRoom, parameters)
-          case None => followup("room-not-connected", parameters)
+          case None => followup(RoomNotConnected, parameters)
         }
       }
     }
   }
 
   def playFavourite(room: Room, parameters: WebhookParameters): EventualResponse = {
-    parameters.favourite(mediaCache) ~> { favourite =>
-      squeezeCentre.playFavourite(room, favourite).map { _ =>
-        followup("playing-favourite", parameters)
+    parameters.favourite(mediaCacheView) ~> { favourite =>
+      musicPlayer.playFavourite(room, favourite).map { _ =>
+        followup(PlayingFavourite, parameters)
       }
     }
   }
 
   def playPlaylist(room: Room, parameters: WebhookParameters): EventualResponse = {
-    parameters.playlist(mediaCache) ~> { playlist =>
-      squeezeCentre.playPlaylist(room, playlist).map { _ =>
-        followup("playing-playlist", parameters)
+    parameters.playlist(mediaCacheView) ~> { playlist =>
+      musicPlayer.playPlaylist(room, playlist).map { _ =>
+        followup(PlayingPlaylist, parameters)
       }
     }
   }
@@ -79,16 +79,16 @@ class WebhookServiceImpl @Inject() (
       case Some(currentTrack) =>
         val title = currentTrack.title
         val artist = currentTrack.artist
-        followup("currently-playing", parameters ++ ("currentTitle" -> title, "currentArtist" -> artist))
+        followup(CurrentlyPlaying, parameters ++ (Parameter.CurrentTitle -> title, Parameter.CurrentArtist -> artist))
       case None =>
-        followup("nothing-playing", parameters)
+        followup(NothingPlaying, parameters)
     }
   }
 
   def playAlbum(room: Room, parameters: WebhookParameters): EventualResponse = {
     case class AlbumAndMaybeArtist(album: Album, maybeArtist: Option[Artist]) {}
     val validatedAlbumAndMaybeArtist: ValidatedNel[String, AlbumAndMaybeArtist] =
-      (parameters.album(mediaCache), parameters.maybeArtist(mediaCache)).mapN {
+      (parameters.album(mediaCacheView), parameters.maybeArtist(mediaCacheView)).mapN {
         AlbumAndMaybeArtist(_, _)
       }
 
@@ -101,7 +101,7 @@ class WebhookServiceImpl @Inject() (
             playSqueezeboxAlbum(room, album, artist, parameters)
           }
           else {
-            followup("wrong-artist", parameters)
+            followup(WrongArtist, parameters)
           }
           case (albumArtists, None) => artistRequired(albumArtists, parameters)
         }
@@ -109,31 +109,31 @@ class WebhookServiceImpl @Inject() (
   }
 
   def browseArtist(parameters: WebhookParameters): EventualResponse = {
-    parameters.artist(mediaCache) ~> { artist =>
-      val albumNames = mediaCache.listAlbums(artist).map(_.title).sorted
-      val albumList = albumNames.mkString(", ")
-      followup("albums-for-artist", parameters + ("albums" -> albumList))
+    parameters.artist(mediaCacheView) ~> { artist =>
+      val albumNames: Seq[String] = mediaCacheView.listAlbums(artist).map(_.title).toSeq.sorted
+      val albumList: String = albumNames.mkString(", ")
+      followup(AlbumsForArtist, parameters + (Parameter.Albums -> albumList))
     }
   }
 
   def playSqueezeboxAlbum(room: Room, album: Album, artist: Artist, parameters: WebhookParameters): Future[WebhookResponse] = {
-    squeezeCentre.playAlbum(room, album, artist).map { _ =>
-      followup("playing-album", parameters + ("artist" -> artist.name))
+    musicPlayer.playAlbum(room, album, artist).map { _ =>
+      followup(PlayingAlbum, parameters + (Parameter.Artist -> artist.name))
     }
   }
 
   def artistRequired(albumArtists: Seq[Artist], parameters: WebhookParameters): Future[WebhookResponse] = Future.successful {
-    val artistNames = albumArtists.map(_.name).sorted.mkString(", ")
-    followup("artist-required", parameters + ("artists" -> artistNames), Seq("artist-required-context"))
+    val artistNames: String = albumArtists.map(_.name).sorted.mkString(", ")
+    followup(ArtistRequired, parameters + (Parameter.Artists -> artistNames), Seq(Context.ArtistRequired))
   }
 
   def update(parameters: WebhookParameters): EventualResponse = {
     mediaUpdateMediator.update
-    followup("updating", parameters)
+    followup(Updating, parameters)
   }
 
-  def followup(event: String, parameters: WebhookParameters, contextNames: Seq[String] = Seq.empty): WebhookResponse = {
-    WebhookResponse(event, parameters, contextNames)
+  def followup(event: Event, parameters: WebhookParameters, contexts: Seq[Context] = Seq.empty): WebhookResponse = {
+    WebhookResponse(event, parameters, contexts)
   }
 
   private object WebhookServiceImplicits {

@@ -6,7 +6,7 @@ package webhook
   *
   * A response back to DialogFlow that sends an event and contexts.
   **/
-case class WebhookResponse(event: String, parameters: WebhookParameters, contextNames: Seq[String] = Seq.empty) {
+case class WebhookResponse(event: Event, parameters: WebhookParameters, contexts: Seq[Context] = Seq.empty) {
 }
 
 object WebhookResponse {
@@ -16,13 +16,13 @@ object WebhookResponse {
 
   implicit val writesWebhookResponse: Writes[WebhookResponse] = {
     (webhookResponse: WebhookResponse) => {
-      val contexts = webhookResponse.contextNames.map { contextName =>
-        Json.obj("name" -> contextName, "parameters" -> webhookResponse.parameters)
+      val contexts = webhookResponse.contexts.map { context =>
+        Json.obj("name" -> context.name, "parameters" -> webhookResponse.parameters)
       }
       Json.obj(
         "followupEvent" ->
           Json.obj(
-            "name" -> webhookResponse.event,
+            "name" -> webhookResponse.event.event,
             "data" -> webhookResponse.parameters,
             "contexts" -> contexts))
     }

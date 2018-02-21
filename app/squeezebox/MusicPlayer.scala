@@ -6,34 +6,10 @@ import scala.collection.SortedSet
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
-  * Interface with a squeezebox to get players, albums, artists and to play albums.
+  * An Interface to play albums, favourites and playlists and also to check which players are currently connected.
   * Created by alex on 23/12/17
   **/
-trait SqueezeCentre {
-
-  /**
-    * Get a list of all known albums.
-    * @return A list of all known albums.
-    */
-  def albums: Future[Seq[Album]]
-
-  /**
-    * Get a list of all known favourites.
-    * @return A list of all known favourites.
-    */
-  def favourites: Future[SortedSet[Favourite]]
-
-  /**
-    * Get a list of all known playlists.
-    * @return A list of all known playlists.
-    */
-  def playlists: Future[SortedSet[Playlist]]
-
-  /**
-    * Get a list of all connected players.
-    * @return A list of all known players.
-    */
-  def rooms: Future[SortedSet[Room]]
+trait MusicPlayer {
 
   /**
     * Get the current [[PlaylistInfo]] from a player.
@@ -66,12 +42,13 @@ trait SqueezeCentre {
     * @return Unit.
     */
   def playPlaylist(player: Room, playlist: Playlist): Future[Unit]
+
+  /**
+    * Get a list of all connected players.
+    * @return A list of all known players.
+    */
+  def rooms(): Future[Set[Room]]
+
+
 }
 
-/**
-  * An object that encapsulates what is currently playing.
-  * @param title The title of the track.
-  * @param maybeArtist The artist, if known.
-  * @param maybeRemoteTitle The remote title of the playlist if it is a remote stream or none otherwise.
-  */
-case class PlaylistInfo(title: String, maybeArtist: Option[String], maybeRemoteTitle: Option[String])

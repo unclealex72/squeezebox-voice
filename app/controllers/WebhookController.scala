@@ -5,7 +5,7 @@ import javax.inject.{Inject, Singleton}
 import cats.data.Validated.Invalid
 import cats.data._
 import cats.implicits._
-import media.MediaCache
+import media.MediaCacheView
 import monads._
 import play.api.Logger
 import play.api.libs.json._
@@ -20,7 +20,7 @@ import scala.concurrent.{ExecutionContext, Future}
   * The controller to handle requests from and responses to DialogFlow.
   **/
 @Singleton
-class WebhookController @Inject()(cc: ControllerComponents, webhookService: WebhookService)(implicit ec: ExecutionContext, mediaCache: MediaCache) extends AbstractController(cc) {
+class WebhookController @Inject()(cc: ControllerComponents, webhookService: WebhookService)(implicit ec: ExecutionContext, mediaCache: MediaCacheView) extends AbstractController(cc) {
 
   /**
     * The entry point for DialogFlow

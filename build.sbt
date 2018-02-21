@@ -10,10 +10,18 @@ scalaVersion := "2.12.3"
 scalacOptions ++= Seq("-target:jvm-1.8", "-Ypartial-unification")
 javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
 
-libraryDependencies += guice
-libraryDependencies += ws
-libraryDependencies += "org.typelevel" %% "cats-core" % "1.0.1"
-libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
+libraryDependencies ++= Seq(
+  guice,
+  ws,
+  "com.beachape" %% "enumeratum" % "1.5.12",
+  "org.typelevel" %% "cats-core" % "1.0.1"
+)
+
+libraryDependencies ++= Seq(
+  "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2",
+  "org.scalamock" %% "scalamock" % "4.1.0"
+).map(_ % Test)
+
 
 dockerBaseImage := "openjdk:alpine"
 dockerExposedPorts := Seq(9443)

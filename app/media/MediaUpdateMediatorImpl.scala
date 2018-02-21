@@ -5,7 +5,7 @@ import javax.inject.Inject
 import dialogflow.UploadEntitiesService
 import models.{Album, Artist}
 import play.api.Logger
-import squeezebox.SqueezeCentre
+import squeezebox.{MusicPlayer, MusicRepository}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -14,7 +14,7 @@ import scala.concurrent.{ExecutionContext, Future}
   *
   * The default implementation of [[MediaUpdateMediator]].
   **/
-class MediaUpdateMediatorImpl @Inject()(val mediaCache: MediaCache, val squeezeCentre: SqueezeCentre, val uploadEntitiesService: UploadEntitiesService)(implicit val ec: ExecutionContext) extends MediaUpdateMediator {
+class MediaUpdateMediatorImpl @Inject()(val mediaCacheUpdater: MediaCacheUpdater, val musicRepository: MusicRepository, val uploadEntitiesService: UploadEntitiesService)(implicit val ec: ExecutionContext) extends MediaUpdateMediator {
 
   private def log(message: String): Unit = {
     Logger.info(message)
@@ -31,15 +31,15 @@ class MediaUpdateMediatorImpl @Inject()(val mediaCache: MediaCache, val squeezeC
 
   override def update: Future[Unit] = {
     for {
-      scRooms <- "Searching for rooms" >> squeezeCentre.rooms
-      scAlbums <- "Searching for albums" >> squeezeCentre.albums
-      scFavourites <- "Searching for favourites" >> squeezeCentre.favourites
-      scPlaylists <- "Searching for playlists" >> squeezeCentre.playlists
-      rooms <- "Caching rooms" >> Future.successful(mediaCache.updateRooms(scRooms.toSeq))
-      albums <- "Caching albums" >> Future.successful(mediaCache.updateAlbums(scAlbums))
-      artists <- "Caching artists" >> Future.successful(mediaCache.updateArtists(extractArtists(albums)))
-      favourites <- "Caching favourites" >> Future.successful(mediaCache.updateFavourites(scFavourites.toSeq))
-      playlists <- "Caching playlists" >> Future.successful(mediaCache.updatePlaylists(scPlaylists.toSeq))
+      scRooms <- "Searching for rooms" >> musicRepository.rooms
+      scAlbums <- "Searching for albums" >> musicRepository.albums
+      scFavourites <- "Searching for favourites" >> musicRepository.favourites
+      scPlaylists <- "Searching for playlists" >> musicRepository.playlists
+      rooms <- "Caching rooms" >> Future.successful(mediaCacheUpdater.updateRooms(scRooms))
+      albums <- "Caching albums" >> Future.successful(mediaCacheUpdater.updateAlbums(scAlbums))
+      artists <- "Caching artists" >> Future.successful(mediaCacheUpdater.updateArtists(extractArtists(albums)))
+      favourites <- "Caching favourites" >> Future.successful(mediaCacheUpdater.updateFavourites(scFavourites))
+      playlists <- "Caching playlists" >> Future.successful(mediaCacheUpdater.updatePlaylists(scPlaylists))
       _ <- "Uploading albums" >> uploadEntitiesService.uploadAlbums(albums)
       _ <- "Uploading artists" >> uploadEntitiesService.uploadArtists(artists)
       _ <- "Uploading favourites" >> uploadEntitiesService.uploadFavourites(favourites)
@@ -50,7 +50,7 @@ class MediaUpdateMediatorImpl @Inject()(val mediaCache: MediaCache, val squeezeC
     }
   }
 
-  def extractArtists(albums: Seq[Album]): Seq[Artist] = {
-    albums.flatMap(_.artists).distinct
+  def extractArtists(albums: Set[Album]): Set[Artist] = {
+    albums.flatMap(_.artists)
   }
 }

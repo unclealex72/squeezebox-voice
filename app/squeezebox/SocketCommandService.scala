@@ -12,7 +12,7 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 /**
   * Created by alex on 23/12/17
   **/
-class SocketCommandService(squeezeboxCentre: SqueezeboxCentreLocation)(implicit ec: ExecutionContext) extends CommandService {
+class SocketCommandService(squeezeboxCentre: SqueezeCentreLocation)(implicit ec: ExecutionContext) extends CommandService {
   /**
     * Execute a command on the logitech media server.
     *

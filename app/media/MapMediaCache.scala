@@ -1,15 +1,16 @@
 package media
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
 import lexical.RemovePunctuationService
 import models._
 
 /**
-  * A [[MediaCache]] that uses volatile hash maps.
+  * A [[MediaCacheView]] that uses volatile hash maps.
   * Created by alex on 26/12/17
   **/
-class MapMediaCache @Inject() (removePunctuation: RemovePunctuationService) extends MediaCache {
+@Singleton
+class MapMediaCache @Inject() (removePunctuation: RemovePunctuationService) extends MediaCacheView with MediaCacheUpdater {
 
   @volatile var albumMap: Map[String, Album] = Map.empty
   @volatile var artistMap: Map[String, Artist] = Map.empty
@@ -73,11 +74,11 @@ class MapMediaCache @Inject() (removePunctuation: RemovePunctuationService) exte
     * @param artist The artist to search for.
     * @return A list of all albums recorded by the artist.
     */
-  override def listAlbums(artist: Artist): Seq[Album] = {
-    albumMap.values.filter(album => album.artists.contains(artist)).toSeq
+  override def listAlbums(artist: Artist): Set[Album] = {
+    albumMap.values.toSet.filter(album => album.artists.contains(artist))
   }
 
-  implicit class UniqueGroupingImplicits[V](values: Seq[V]) {
+  implicit class UniqueGroupingImplicits[V](values: Set[V]) {
 
     def uniquelyGroupBy(keyBuilder: V => String): Map[String, V] = {
       val empty: Map[String, V] = Map.empty
@@ -92,7 +93,7 @@ class MapMediaCache @Inject() (removePunctuation: RemovePunctuationService) exte
     *
     * @param albums All known albums.
     */
-  override def updateAlbums(albums: Seq[Album]): Seq[Album] = {
+  override def updateAlbums(albums: Set[Album]): Set[Album] = {
     albumMap = albums.uniquelyGroupBy(_.entry.unpunctuated.toLowerCase)
     albums
   }
@@ -102,7 +103,7 @@ class MapMediaCache @Inject() (removePunctuation: RemovePunctuationService) exte
     *
     * @param artists All known artists.
     */
-  override def updateArtists(artists: Seq[Artist]): Seq[Artist] = {
+  override def updateArtists(artists: Set[Artist]): Set[Artist] = {
     artistMap = artists.uniquelyGroupBy(_.entry.unpunctuated.toLowerCase)
     artists
   }
@@ -112,9 +113,9 @@ class MapMediaCache @Inject() (removePunctuation: RemovePunctuationService) exte
     *
     * @param rooms All known players.
     */
-  override def updateRooms(rooms: Seq[Room]): Seq[Room] = {
+  override def updateRooms(rooms: Set[Room]): Set[Room] = {
     roomMap = roomMap ++ rooms.uniquelyGroupBy(_.name.toLowerCase)
-    (rooms ++ roomMap.values).distinct
+    roomMap.values.toSet
   }
 
   /**
@@ -122,7 +123,7 @@ class MapMediaCache @Inject() (removePunctuation: RemovePunctuationService) exte
     *
     * @param favourites All known favourites.
     */
-  override def updateFavourites(favourites: Seq[Favourite]): Seq[Favourite] = {
+  override def updateFavourites(favourites: Set[Favourite]): Set[Favourite] = {
     favouriteMap = favourites.uniquelyGroupBy(_.entry.unpunctuated.toLowerCase)
     favourites
   }
@@ -132,7 +133,7 @@ class MapMediaCache @Inject() (removePunctuation: RemovePunctuationService) exte
     *
     * @param playlists All known playlists.
     */
-  override def updatePlaylists(playlists: Seq[Playlist]): Seq[Playlist] = {
+  override def updatePlaylists(playlists: Set[Playlist]): Set[Playlist] = {
     playlistMap = playlists.uniquelyGroupBy(_.entry.unpunctuated.toLowerCase)
     playlists
   }

@@ -11,7 +11,7 @@ import scala.concurrent.{ExecutionContext, Future}
   * Created by alex on 31/01/18
   **/
 class NowPlayingServiceImpl @Inject() (
-                                        squeezeCentre: SqueezeCentre,
+                                        squeezeCentre: MusicPlayer,
                                         albumTrackReportingReversalHack: AlbumTrackReportingReversalHack)
                                       (implicit ec: ExecutionContext)
   extends NowPlayingService {

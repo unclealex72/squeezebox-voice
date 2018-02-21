@@ -3,7 +3,7 @@ package squeezebox
 /**
   * Created by alex on 23/12/17
   **/
-trait SqueezeboxCentreLocation {
+trait SqueezeCentreLocation {
 
   /**
     * @return The SqueezeboxCentre's host.

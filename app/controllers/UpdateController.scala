@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject._
 
-import media.{MediaCache, MediaUpdateMediator}
+import media.{MediaCacheView, MediaUpdateMediator}
 import play.api.Logger
 import play.api.libs.json._
 import play.api.mvc._

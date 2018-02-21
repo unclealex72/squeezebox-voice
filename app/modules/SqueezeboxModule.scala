@@ -3,8 +3,8 @@ package modules
 import javax.inject.{Inject, Provider, Singleton}
 
 import akka.actor.ActorSystem
-import lexical.{RomanNumeralSynonymService, RomanNumeralsService, RomanNumeralsServiceImpl, SynonymService}
-import media.{MapMediaCache, MediaCache, MediaUpdateMediator, MediaUpdateMediatorImpl}
+import lexical._
+import media._
 import play.api.inject._
 import squeezebox._
 
@@ -15,18 +15,20 @@ import scala.concurrent.ExecutionContext
   **/
 
 class SqueezeboxModule extends SimpleModule(
-  bind[SqueezeboxCentreLocation].to[ConfiguredSqueezeboxCentreLocation].eagerly(),
+  bind[SqueezeCentreLocation].to[ConfiguredSqueezeCentreLocation].eagerly(),
   bind[RomanNumeralsService].to[RomanNumeralsServiceImpl].eagerly(),
   bind[SynonymService].to[RomanNumeralSynonymService].eagerly(),
-  bind[SqueezeCentre].to[SqueezeCentreImpl].eagerly(),
-  bind[MediaCache].to[MapMediaCache].eagerly(),
+  bind[MusicPlayer].to[SqueezeCentreImpl].eagerly(),
+  bind[MusicRepository].to[SqueezeCentreImpl].eagerly(),
+  bind[MediaCacheView].to[MapMediaCache].eagerly(),
+  bind[MediaCacheUpdater].to[MapMediaCache].eagerly(),
   bind[MediaUpdateMediator].to[MediaUpdateMediatorImpl].eagerly(),
   bind[CommandService].toProvider[CommandServiceProvider].eagerly(),
   bind[NowPlayingService].to[NowPlayingServiceImpl].eagerly()) {
 }
 
 @Singleton
-class CommandServiceProvider @Inject() (actorSystem: ActorSystem, mediaCentre: SqueezeboxCentreLocation) extends Provider[CommandService] {
+class CommandServiceProvider @Inject() (actorSystem: ActorSystem, mediaCentre: SqueezeCentreLocation) extends Provider[CommandService] {
   val ec: ExecutionContext = actorSystem.dispatchers.lookup("squeezeboxCentre-dispatcher")
   lazy val get = new SocketCommandService(mediaCentre)(ec)
 }

@@ -2,7 +2,7 @@ package squeezebox
 import java.net.{URLDecoder, URLEncoder}
 import java.nio.charset.StandardCharsets
 import java.text.Normalizer
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
 import lexical.{RemovePunctuationService, SynonymService}
 import models._
@@ -16,20 +16,21 @@ import scala.util.Try
   * The default implementation of ``SqueezeCentre``
   * Created by alex on 24/12/17
   **/
-class SqueezeCentreImpl @Inject()(commandService: CommandService, synonyms: SynonymService, removePunctuation: RemovePunctuationService)(implicit ec: ExecutionContext) extends SqueezeCentre {
+@Singleton
+class SqueezeCentreImpl @Inject()(commandService: CommandService, synonyms: SynonymService, removePunctuation: RemovePunctuationService)(implicit ec: ExecutionContext) extends MusicPlayer with MusicRepository {
 
   def execute(command: String): Future[Seq[(String, String)]] = {
     Logger.info(command)
     def parse(response: String): Seq[(String, String)] = {
       def splitByColon(str: String): Option[(String, String)] = {
-        val maybeFirstColonPosition = Some(str.indexOf(':')).filter(_ != -1)
+        val maybeFirstColonPosition: Option[Int] = Some(str.indexOf(':')).filter(_ != -1)
         maybeFirstColonPosition.map { firstColonPosition =>
           val (key, valueWithColon) = str.splitAt(firstColonPosition)
           val value = valueWithColon.drop(1)
           (key, value)
         }
       }
-      val responseWithoutCommand = response.drop(command.length)
+      val responseWithoutCommand: String = response.drop(command.length)
       for {
         encodedSegment <- responseWithoutCommand.trim().split("""\s+""")
         segment <- Some(dec(encodedSegment))
@@ -59,16 +60,16 @@ class SqueezeCentreImpl @Inject()(commandService: CommandService, synonyms: Syno
     *
     * @return A list of all known albums.
     */
-  override def albums: Future[Seq[Album]] = {
+  override def albums: Future[Set[Album]] = {
     for {
       albumCount <- count("albums")
       response <- execute(s"albums 0 $albumCount tags:la")
     } yield parseAlbums(response)
   }
 
-  def parseAlbums(response: Seq[(String, String)]): Seq[Album] = {
+  def parseAlbums(response: Seq[(String, String)]): Set[Album] = {
     case class ProtoAlbum(title: String, artist: String)
-    val protoAlbums = for {
+    val protoAlbums: Seq[ProtoAlbum] = for {
       map <- toMaps(response, "id")
       title <- map.get("album")
       artist <- map.get("artist")
@@ -78,12 +79,12 @@ class SqueezeCentreImpl @Inject()(commandService: CommandService, synonyms: Syno
     }
     protoAlbums.groupBy(_.title).toSeq.map {
       case (title, protos) =>
-        val artists = protos.map { proto =>
-          val artist = proto.artist
+        val artists: Seq[Artist] = protos.map { proto =>
+          val artist: String = proto.artist
           Artist(artist, entryOf(artist))
         }
-        Album(title, artists, entryOf(title))
-    }
+        Album(title, artists.toSet, entryOf(title))
+    }.toSet
   }
 
   override def playlistInformation(room: Room): Future[Option[PlaylistInfo]] = {
@@ -126,10 +127,9 @@ class SqueezeCentreImpl @Inject()(commandService: CommandService, synonyms: Syno
 
   def executeAndParse[A](command: String, separator: String, ordering: A => String)
                         (parser: Map[String, String] => Option[A])
-                        (implicit ec: ExecutionContext): Future[SortedSet[A]] = {
+                        (implicit ec: ExecutionContext): Future[Set[A]] = {
     execute(command).map { responses =>
-      val empty: SortedSet[A] = SortedSet.empty[A](Ordering.by(ordering(_).toLowerCase))
-      empty ++ toMaps(responses, separator).flatMap(parser.apply)
+      toMaps(responses, separator).flatMap(parser.apply).toSet
     }
   }
 
@@ -138,7 +138,7 @@ class SqueezeCentreImpl @Inject()(commandService: CommandService, synonyms: Syno
     *
     * @return A list of all known players.
     */
-  override def rooms: Future[SortedSet[Room]] = {
+  override def rooms: Future[Set[Room]] = {
     executeAndParse[Room]("players 0", "playerindex", _.name) { map =>
       for {
         id <- map.get("playerid")
@@ -155,7 +155,7 @@ class SqueezeCentreImpl @Inject()(commandService: CommandService, synonyms: Syno
     *
     * @return A list of all known favourites.
     */
-  override def favourites: Future[SortedSet[Favourite]] = {
+  override def favourites: Future[Set[Favourite]] = {
     executeAndParse[Favourite]("favorites items 0 99999999 tags:name", "id", _.name) { map =>
       for {
         id <- map.get("id")
@@ -173,7 +173,7 @@ class SqueezeCentreImpl @Inject()(commandService: CommandService, synonyms: Syno
     *
     * @return A list of all known playlists.
     */
-  override def playlists: Future[SortedSet[Playlist]] = {
+  override def playlists: Future[Set[Playlist]] = {
     executeAndParse[Playlist]("playlists 0 99999999 tags:u", "id", _.name) { map =>
       for {
         id <- map.get("id")

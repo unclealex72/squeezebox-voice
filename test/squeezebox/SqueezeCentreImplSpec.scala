@@ -35,7 +35,7 @@ class SqueezeCentreImplSpec extends AsyncFlatSpec with Matchers {
 
   it should "eventually get a list of all known players" in {
     squeezeCentre().rooms.map { players =>
-      players should contain inOrderOnly(
+      players should contain only(
         Room("80:81:82:83:84:85", "Bedroom", entryOf("Bedroom")),
         Room("00:01:02:03:04:05", "Kitchen", entryOf("Kitchen"))
       )
@@ -53,10 +53,10 @@ class SqueezeCentreImplSpec extends AsyncFlatSpec with Matchers {
     val thePolice = Artist("The Police", entryOf("The Police"))
     squeezeCentre().albums.map { albums =>
       albums should contain only(
-        Album("A Kind of Magic", Seq(queen), entryOf("A Kind of Magic")),
-        Album("A Kind of Magic (Extras)", Seq(queen), entryOf("A Kind of Magic Extras")),
-        Album("A Night at the Opera", Seq(queen), entryOf("A Night at the Opera")),
-        Album("Greatest Hits", Seq(queen, thePolice), entryOf("Greatest Hits"))
+        Album("A Kind of Magic", Set(queen), entryOf("A Kind of Magic")),
+        Album("A Kind of Magic (Extras)", Set(queen), entryOf("A Kind of Magic Extras")),
+        Album("A Night at the Opera", Set(queen), entryOf("A Night at the Opera")),
+        Album("Greatest Hits", Set(queen, thePolice), entryOf("Greatest Hits"))
       )
     }
   }

@@ -13,7 +13,7 @@ case class Album(
                   /**
                     * The artists for the individual albums.
                     */
-                  artists: Seq[Artist],
+                  artists: Set[Artist],
                   /**
                     * The DialogFlow entry for these albums.
                     */
