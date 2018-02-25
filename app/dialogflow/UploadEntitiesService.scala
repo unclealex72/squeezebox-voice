@@ -40,8 +40,8 @@ trait UploadEntitiesService {
   def uploadPlaylists(playlists: Set[Playlist]): Future[Unit]
 
   /**
-    * Upload all rooms.
-    * @param room The rooms to upload.
+    * Upload all connectedRooms.
+    * @param room The connectedRooms to upload.
     * @return
     */
   def uploadRooms(room: Set[Room]): Future[Unit]

@@ -19,7 +19,8 @@ libraryDependencies ++= Seq(
 
 libraryDependencies ++= Seq(
   "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2",
-  "org.scalamock" %% "scalamock" % "4.1.0"
+  "org.scalamock" %% "scalamock" % "4.1.0",
+  "org.skyscreamer" % "jsonassert" % "1.5.0"
 ).map(_ % Test)
 
 

@@ -1,0 +1,189 @@
+{
+  "originalRequest": {
+    "source": "google",
+    "version": "2",
+    "data": {
+      "isInSandbox": true,
+      "surface": {
+        "capabilities": [
+          {
+            "name": "actions.capability.MEDIA_RESPONSE_AUDIO"
+          },
+          {
+            "name": "actions.capability.WEB_BROWSER"
+          },
+          {
+            "name": "actions.capability.AUDIO_OUTPUT"
+          },
+          {
+            "name": "actions.capability.SCREEN_OUTPUT"
+          }
+        ]
+      },
+      "inputs": [
+        {
+          "rawInputs": [
+            {
+              "query": "tell my music player to play favourite planet rock in the lounge",
+              "inputType": "VOICE"
+            }
+          ],
+          "arguments": [
+            {
+              "rawText": "play favourite planet rock in the lounge",
+              "textValue": "play favourite planet rock in the lounge",
+              "name": "trigger_query"
+            },
+            {
+              "name": "3p_open_priority",
+              "boolValue": true
+            }
+          ],
+          "intent": "actions.intent.MAIN"
+        }
+      ],
+      "user": {
+        "lastSeen": "2018-02-24T18:57:24Z",
+        "locale": "en-US",
+        "userId": "A***REMOVED***"
+      },
+      "conversation": {
+        "conversationId": "1519499133111",
+        "type": "NEW"
+      },
+      "availableSurfaces": [
+        {
+          "capabilities": [
+            {
+              "name": "actions.capability.AUDIO_OUTPUT"
+            },
+            {
+              "name": "actions.capability.SCREEN_OUTPUT"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "id": "49f2ed8d-9bf5-4671-8b62-0f018f527403",
+  "timestamp": "2018-02-24T19:05:33.395Z",
+  "lang": "en-us",
+  "result": {
+    "source": "agent",
+    "resolvedQuery": "play favourite planet rock in the lounge",
+    "speech": "",
+    "action": "play-favourite",
+    "actionIncomplete": false,
+    "parameters": {
+      "favourite": "planet rock",
+      "room": "lounge"
+    },
+    "contexts": [
+      {
+        "name": "google_assistant_welcome",
+        "parameters": {
+          "room.original": "lounge",
+          "favourite": "planet rock",
+          "room": "lounge",
+          "favourite.original": "planet rock"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "actions_capability_screen_output",
+        "parameters": {
+          "room.original": "lounge",
+          "favourite": "planet rock",
+          "room": "lounge",
+          "favourite.original": "planet rock"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "actions_capability_audio_output",
+        "parameters": {
+          "room.original": "lounge",
+          "favourite": "planet rock",
+          "room": "lounge",
+          "favourite.original": "planet rock"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "google_assistant_input_type_voice",
+        "parameters": {
+          "room.original": "lounge",
+          "favourite": "planet rock",
+          "room": "lounge",
+          "favourite.original": "planet rock"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "actions_capability_media_response_audio",
+        "parameters": {
+          "room.original": "lounge",
+          "favourite": "planet rock",
+          "room": "lounge",
+          "favourite.original": "planet rock"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "actions_capability_web_browser",
+        "parameters": {
+          "room.original": "lounge",
+          "favourite": "planet rock",
+          "room": "lounge",
+          "favourite.original": "planet rock"
+        },
+        "lifespan": 0
+      }
+    ],
+    "metadata": {
+      "matchedParameters": [
+        {
+          "required": true,
+          "dataType": "@favourite",
+          "name": "favourite",
+          "value": "$favourite",
+          "isList": false
+        },
+        {
+          "required": true,
+          "dataType": "@room",
+          "name": "room",
+          "value": "$room",
+          "prompts": [
+            {
+              "lang": "en",
+              "value": "What room are you in?"
+            }
+          ],
+          "isList": false
+        }
+      ],
+      "intentName": "play favourite",
+      "intentId": "35e10548-59f3-4fc2-98d5-45f91ada4572",
+      "webhookUsed": "true",
+      "webhookForSlotFillingUsed": "false",
+      "nluResponseTime": 52
+    },
+    "fulfillment": {
+      "speech": "",
+      "messages": [
+        {
+          "type": 0,
+          "speech": ""
+        }
+      ]
+    },
+    "score": 1
+  },
+  "status": {
+    "code": 200,
+    "errorType": "success",
+    "webhookTimedOut": false
+  },
+  "sessionId": "1519499133111"
+}

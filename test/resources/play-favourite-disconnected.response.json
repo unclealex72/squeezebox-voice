@@ -1,0 +1,10 @@
+{
+  "followupEvent": {
+    "name": "room-not-connected",
+    "data": {
+      "room": "lounge",
+      "favourite": "planet rock"
+    },
+    "contexts": []
+  }
+}

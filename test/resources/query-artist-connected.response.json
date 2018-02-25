@@ -1,0 +1,28 @@
+{
+  "followupEvent": {
+    "name": "artist-required",
+    "data": {
+      "room": "bedroom",
+      "album": "Greatest Hits",
+      "artist": "",
+      "artists": [
+        "Queen",
+        "The Police"
+      ]
+    },
+    "contexts": [
+      {
+        "name": "artist-required-context",
+        "parameters": {
+          "room": "bedroom",
+          "album": "Greatest Hits",
+          "artist": "",
+          "artists": [
+            "Queen",
+            "The Police"
+          ]
+        }
+      }
+    ]
+  }
+}

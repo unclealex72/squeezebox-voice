@@ -1,0 +1,11 @@
+{
+  "followupEvent": {
+    "name": "room-not-connected",
+    "data": {
+      "room": "lounge",
+      "album": "Death Magnetic",
+      "artist": ""
+    },
+    "contexts": []
+  }
+}

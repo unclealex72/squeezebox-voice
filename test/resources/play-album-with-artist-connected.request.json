@@ -1,0 +1,224 @@
+{
+  "originalRequest": {
+    "source": "google",
+    "version": "2",
+    "data": {
+      "isInSandbox": true,
+      "surface": {
+        "capabilities": [
+          {
+            "name": "actions.capability.AUDIO_OUTPUT"
+          },
+          {
+            "name": "actions.capability.SCREEN_OUTPUT"
+          },
+          {
+            "name": "actions.capability.MEDIA_RESPONSE_AUDIO"
+          },
+          {
+            "name": "actions.capability.WEB_BROWSER"
+          }
+        ]
+      },
+      "inputs": [
+        {
+          "rawInputs": [
+            {
+              "query": "tell my music player to play album greatest hits by queen in the bedroom",
+              "inputType": "VOICE"
+            }
+          ],
+          "arguments": [
+            {
+              "rawText": "play album greatest hits by queen in the bedroom",
+              "textValue": "play album greatest hits by queen in the bedroom",
+              "name": "trigger_query"
+            },
+            {
+              "name": "3p_open_priority",
+              "boolValue": true
+            },
+            {
+              "rawText": "Greatest Hits",
+              "textValue": "Greatest Hits",
+              "name": "album"
+            },
+            {
+              "rawText": "Queen",
+              "textValue": "Queen",
+              "name": "artist"
+            },
+            {
+              "rawText": "Bedroom",
+              "textValue": "Bedroom",
+              "name": "room"
+            }
+          ],
+          "intent": "play album"
+        }
+      ],
+      "user": {
+        "lastSeen": "2018-02-24T17:05:10Z",
+        "locale": "en-GB",
+        "userId": "A***REMOVED***"
+      },
+      "conversation": {
+        "conversationId": "1519491940968",
+        "type": "NEW"
+      },
+      "availableSurfaces": [
+        {
+          "capabilities": [
+            {
+              "name": "actions.capability.AUDIO_OUTPUT"
+            },
+            {
+              "name": "actions.capability.SCREEN_OUTPUT"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "id": "934845bc-81c2-4a2f-9fc3-7a09917eaac0",
+  "timestamp": "2018-02-24T17:05:41.293Z",
+  "lang": "en-gb",
+  "result": {
+    "source": "agent",
+    "resolvedQuery": "play album greatest hits by queen in the bedroom",
+    "speech": "",
+    "action": "play-album",
+    "actionIncomplete": false,
+    "parameters": {
+      "artist": "Queen",
+      "album": "Greatest Hits",
+      "room": "bedroom"
+    },
+    "contexts": [
+      {
+        "name": "google_assistant_welcome",
+        "parameters": {
+          "artist": "Queen",
+          "album": "Greatest Hits",
+          "room.original": "bedroom",
+          "album.original": "greatest hits",
+          "artist.original": "queen",
+          "room": "bedroom"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "actions_capability_screen_output",
+        "parameters": {
+          "artist": "Queen",
+          "album": "Greatest Hits",
+          "room.original": "bedroom",
+          "album.original": "greatest hits",
+          "artist.original": "queen",
+          "room": "bedroom"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "google_assistant_input_type_voice",
+        "parameters": {
+          "artist": "Queen",
+          "album": "Greatest Hits",
+          "room.original": "bedroom",
+          "album.original": "greatest hits",
+          "artist.original": "queen",
+          "room": "bedroom"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "actions_capability_audio_output",
+        "parameters": {
+          "artist": "Queen",
+          "album": "Greatest Hits",
+          "room.original": "bedroom",
+          "album.original": "greatest hits",
+          "artist.original": "queen",
+          "room": "bedroom"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "actions_capability_web_browser",
+        "parameters": {
+          "artist": "Queen",
+          "album": "Greatest Hits",
+          "room.original": "bedroom",
+          "album.original": "greatest hits",
+          "artist.original": "queen",
+          "room": "bedroom"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "actions_capability_media_response_audio",
+        "parameters": {
+          "artist": "Queen",
+          "album": "Greatest Hits",
+          "room.original": "bedroom",
+          "album.original": "greatest hits",
+          "artist.original": "queen",
+          "room": "bedroom"
+        },
+        "lifespan": 0
+      }
+    ],
+    "metadata": {
+      "matchedParameters": [
+        {
+          "required": true,
+          "dataType": "@album",
+          "name": "album",
+          "value": "$album",
+          "isList": false
+        },
+        {
+          "required": true,
+          "dataType": "@room",
+          "name": "room",
+          "value": "$room",
+          "prompts": [
+            {
+              "lang": "en",
+              "value": "What room are you in?"
+            }
+          ],
+          "isList": false
+        },
+        {
+          "required": false,
+          "dataType": "@artist",
+          "name": "artist",
+          "value": "$artist",
+          "isList": false
+        }
+      ],
+      "intentName": "play album",
+      "intentId": "a4250e42-c29e-4927-b4cf-ee75a1af9fd1",
+      "webhookUsed": "true",
+      "webhookForSlotFillingUsed": "false",
+      "nluResponseTime": 103
+    },
+    "fulfillment": {
+      "speech": "",
+      "messages": [
+        {
+          "type": 0,
+          "speech": ""
+        }
+      ]
+    },
+    "score": 1
+  },
+  "status": {
+    "code": 200,
+    "errorType": "success",
+    "webhookTimedOut": false
+  },
+  "sessionId": "1519491940968"
+}

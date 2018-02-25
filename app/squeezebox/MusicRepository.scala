@@ -5,7 +5,7 @@ import models.{Album, Favourite, Playlist, Room}
 import scala.concurrent.Future
 
 /**
-  * An interface to get rooms, albums, favourites and playlists from a music repository.
+  * An interface to get connectedRooms, albums, favourites and playlists from a music repository.
   **/
 trait MusicRepository {
 
@@ -31,7 +31,7 @@ trait MusicRepository {
     * Get a list of all connected players.
     * @return A list of all known players.
     */
-  def rooms: Future[Set[Room]]
+  def connectedRooms: Future[Set[Room]]
 
 
 }

@@ -47,7 +47,7 @@ trait MusicPlayer {
     * Get a list of all connected players.
     * @return A list of all known players.
     */
-  def rooms(): Future[Set[Room]]
+  def connectedRooms(): Future[Set[Room]]
 
 
 }

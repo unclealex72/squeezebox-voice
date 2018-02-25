@@ -1,11 +1,9 @@
 package controllers
 
-import javax.inject.{Inject, Singleton}
-
 import cats.data.Validated.Invalid
 import cats.data._
 import cats.implicits._
-import media.MediaCacheView
+import javax.inject.{Inject, Singleton}
 import monads._
 import play.api.Logger
 import play.api.libs.json._
@@ -20,19 +18,19 @@ import scala.concurrent.{ExecutionContext, Future}
   * The controller to handle requests from and responses to DialogFlow.
   **/
 @Singleton
-class WebhookController @Inject()(cc: ControllerComponents, webhookService: WebhookService)(implicit ec: ExecutionContext, mediaCache: MediaCacheView) extends AbstractController(cc) {
+class WebhookController @Inject()(cc: ControllerComponents, webhookService: WebhookService)(implicit ec: ExecutionContext) extends AbstractController(cc) {
 
   /**
     * The entry point for DialogFlow
     * @return A response corresponding to a DialogFlow request.
     */
   def webhook: Action[JsValue] = Action.async(parse.tolerantJson) { implicit request =>
-    val body = request.body
-    Logger.info(Json.prettyPrint(body))
-    val evWebhookRequest = Future.successful {
+    val body: JsValue = request.body
+    Logger.info(Json.asciiStringify(body))
+    val evWebhookRequest: Future[Validated[NonEmptyList[String], WebhookRequest]] = Future.successful {
       parseWebhookRequest(body)
     }
-    val evWebhookResponse = for {
+    val evWebhookResponse: EitherT[Future, NonEmptyList[String], WebhookResponse] = for {
       webhookRequest <- evWebhookRequest.>
       webhookResponse <- webhookService(webhookRequest).>
     } yield {
@@ -50,7 +48,7 @@ class WebhookController @Inject()(cc: ControllerComponents, webhookService: Webh
     body.validate[WebhookRequest] match {
       case JsSuccess(webhookRequest, _) => webhookRequest.validNel
       case JsError(errors) =>
-        val errorMessages = errors.flatMap {
+        val errorMessages: Seq[String] = errors.flatMap {
           case (path, validationErrors) => validationErrors.map { validationError =>
             s"$path: $validationError"
           }
@@ -65,9 +63,11 @@ class WebhookController @Inject()(cc: ControllerComponents, webhookService: Webh
     * @return A bad request containing the errors.
     */
   def respondWithErrors(errors: NonEmptyList[String]): Result = {
-    val errorList = errors.toList
+    val errorList: List[String] = errors.toList
     errorList.foreach(Logger.error(_))
-    BadRequest(Json.toJson(errorList))
+    val jsonResponse: JsValue = Json.toJson(errorList)
+    Logger.error(Json.asciiStringify(jsonResponse))
+    BadRequest(jsonResponse)
   }
 
   /**
@@ -76,7 +76,9 @@ class WebhookController @Inject()(cc: ControllerComponents, webhookService: Webh
     * @return An OK response.
     */
   def respondWithSuccess(webhookResponse: WebhookResponse): Result = {
-    Ok(Json.toJson(webhookResponse))
+    val jsonResponse: JsValue = Json.toJson(webhookResponse)
+    Logger.info(Json.asciiStringify(jsonResponse))
+    Ok(jsonResponse)
   }
 
 }

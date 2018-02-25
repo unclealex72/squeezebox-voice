@@ -1,0 +1,10 @@
+{
+  "followupEvent": {
+    "name": "playing-favourite",
+    "data": {
+      "room": "bedroom",
+      "favourite": "planet rock"
+    },
+    "contexts": []
+  }
+}

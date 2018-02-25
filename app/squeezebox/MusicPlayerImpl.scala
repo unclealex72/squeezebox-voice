@@ -13,11 +13,11 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
 /**
-  * The default implementation of ``SqueezeCentre``
+  * The default implementation of [[MusicPlayer]] and [[MusicRepository]]
   * Created by alex on 24/12/17
   **/
 @Singleton
-class SqueezeCentreImpl @Inject()(commandService: CommandService, synonyms: SynonymService, removePunctuation: RemovePunctuationService)(implicit ec: ExecutionContext) extends MusicPlayer with MusicRepository {
+class MusicPlayerImpl @Inject()(commandService: CommandService, synonyms: SynonymService, removePunctuation: RemovePunctuationService)(implicit ec: ExecutionContext) extends MusicPlayer with MusicRepository {
 
   def execute(command: String): Future[Seq[(String, String)]] = {
     Logger.info(command)
@@ -47,7 +47,7 @@ class SqueezeCentreImpl @Inject()(commandService: CommandService, synonyms: Syno
 
   def count(command: String): Future[Int] = {
     execute(command).map { keyValuePairs =>
-      val maybeCount = for {
+      val maybeCount: Option[Int] = for {
         keyValue <- keyValuePairs.headOption if keyValue._1 == "count"
         numericValue <- Try(keyValue._2.toInt).toOption
       } yield numericValue
@@ -88,10 +88,10 @@ class SqueezeCentreImpl @Inject()(commandService: CommandService, synonyms: Syno
   }
 
   override def playlistInformation(room: Room): Future[Option[PlaylistInfo]] = {
-    rooms.flatMap { availableRooms =>
-      if (availableRooms.contains(room)) {
+    connectedRooms.flatMap { availableRooms =>
+      if (availableRooms.map(_.entry.unpunctuated).contains(room.entry.unpunctuated)) {
         execute(s"${room.id} status - 1 tags:Na").map { kvs =>
-          val responseMap = kvs.toMap
+          val responseMap: Map[String, String] = kvs.toMap
           responseMap.get("title").map { title =>
             PlaylistInfo(title, responseMap.get("artist"), responseMap.get("remote_title"))
           }
@@ -112,7 +112,7 @@ class SqueezeCentreImpl @Inject()(commandService: CommandService, synonyms: Syno
     case class State(
                       subLists: Seq[Map[String, String]] = Seq.empty,
                       currentPartition: Map[String, String] = Map.empty)
-    val finalState = response.foldLeft(State()) { (state, kv) =>
+    val finalState: State = response.foldLeft(State()) { (state, kv) =>
       val (key, value) = kv
       val (subLists, currentPartition) = if (key == delimitingKey) {
         (state.subLists :+ state.currentPartition, Map.empty[String, String])
@@ -138,13 +138,14 @@ class SqueezeCentreImpl @Inject()(commandService: CommandService, synonyms: Syno
     *
     * @return A list of all known players.
     */
-  override def rooms: Future[Set[Room]] = {
+  override def connectedRooms: Future[Set[Room]] = {
     executeAndParse[Room]("players 0", "playerindex", _.name) { map =>
       for {
         id <- map.get("playerid")
         name <- map.get("name")
+        connected <- map.get("connected") if connected == "1"
       } yield {
-        Logger.info(s"Found room $name")
+        Logger.info(s"Found room $name with ID $id")
         Room(id, name, entryOf(name))
       }
     }

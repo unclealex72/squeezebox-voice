@@ -1,0 +1,10 @@
+{
+  "followupEvent": {
+    "name": "playing-playlist",
+    "data": {
+      "room": "bedroom",
+      "playlist": "Mezmerize and Hypnotize"
+    },
+    "contexts": []
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "followupEvent": {
+    "name": "playing-album",
+    "data": {
+      "room": "bedroom",
+      "album": "Greatest Hits",
+      "artist": "Queen"
+    },
+    "contexts": []
+  }
+}

@@ -20,9 +20,9 @@ trait MediaCacheUpdater {
   def updateArtists(artists: Set[Artist]): Set[Artist]
 
   /**
-    * Update the rooms.
-    * Note that rooms that are no longer connected are not removed.
-    * @param rooms All known rooms.
+    * Update the connectedRooms.
+    * Note that connectedRooms that are no longer connected are not removed.
+    * @param rooms All known connectedRooms.
     */
   def updateRooms(rooms: Set[Room]): Set[Room]
 

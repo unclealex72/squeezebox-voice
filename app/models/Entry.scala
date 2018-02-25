@@ -13,4 +13,4 @@ case class Entry(
                   /**
                     * Synonyms for the entry.
                     */
-                  synonyms: Seq[String])
+                  synonyms: Seq[String] = Seq.empty)

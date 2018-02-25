@@ -1,0 +1,163 @@
+{
+  "originalRequest": {
+    "source": "google",
+    "version": "2",
+    "data": {
+      "isInSandbox": true,
+      "surface": {
+        "capabilities": [
+          {
+            "name": "actions.capability.AUDIO_OUTPUT"
+          },
+          {
+            "name": "actions.capability.SCREEN_OUTPUT"
+          },
+          {
+            "name": "actions.capability.MEDIA_RESPONSE_AUDIO"
+          },
+          {
+            "name": "actions.capability.WEB_BROWSER"
+          }
+        ]
+      },
+      "inputs": [
+        {
+          "rawInputs": [
+            {
+              "query": "tell my music player to browse artist queen",
+              "inputType": "VOICE"
+            }
+          ],
+          "arguments": [
+            {
+              "rawText": "browse artist queen",
+              "textValue": "browse artist queen",
+              "name": "trigger_query"
+            },
+            {
+              "name": "3p_open_priority",
+              "boolValue": true
+            }
+          ],
+          "intent": "actions.intent.MAIN"
+        }
+      ],
+      "user": {
+        "lastSeen": "2018-02-24T17:05:40Z",
+        "locale": "en-GB",
+        "userId": "A***REMOVED***"
+      },
+      "conversation": {
+        "conversationId": "1519492028382",
+        "type": "NEW"
+      },
+      "availableSurfaces": [
+        {
+          "capabilities": [
+            {
+              "name": "actions.capability.AUDIO_OUTPUT"
+            },
+            {
+              "name": "actions.capability.SCREEN_OUTPUT"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "id": "f291f576-c538-459b-ab36-f1ac4990b02b",
+  "timestamp": "2018-02-24T17:07:08.643Z",
+  "lang": "en-gb",
+  "result": {
+    "source": "agent",
+    "resolvedQuery": "browse artist queen",
+    "speech": "",
+    "action": "browse-artist",
+    "actionIncomplete": false,
+    "parameters": {
+      "artist": "Queen"
+    },
+    "contexts": [
+      {
+        "name": "google_assistant_welcome",
+        "parameters": {
+          "artist": "Queen",
+          "artist.original": "queen"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "actions_capability_screen_output",
+        "parameters": {
+          "artist": "Queen",
+          "artist.original": "queen"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "actions_capability_audio_output",
+        "parameters": {
+          "artist": "Queen",
+          "artist.original": "queen"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "google_assistant_input_type_voice",
+        "parameters": {
+          "artist": "Queen",
+          "artist.original": "queen"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "actions_capability_web_browser",
+        "parameters": {
+          "artist": "Queen",
+          "artist.original": "queen"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "actions_capability_media_response_audio",
+        "parameters": {
+          "artist": "Queen",
+          "artist.original": "queen"
+        },
+        "lifespan": 0
+      }
+    ],
+    "metadata": {
+      "matchedParameters": [
+        {
+          "required": true,
+          "dataType": "@artist",
+          "name": "artist",
+          "value": "$artist",
+          "isList": false
+        }
+      ],
+      "intentName": "browse artist @artist:artist ",
+      "intentId": "9e36361b-eb9c-4730-bad7-a4f03fab7051",
+      "webhookUsed": "true",
+      "webhookForSlotFillingUsed": "false",
+      "nluResponseTime": 34
+    },
+    "fulfillment": {
+      "speech": "",
+      "messages": [
+        {
+          "type": 0,
+          "speech": ""
+        }
+      ]
+    },
+    "score": 1
+  },
+  "status": {
+    "code": 200,
+    "errorType": "success",
+    "webhookTimedOut": false
+  },
+  "sessionId": "1519492028382"
+}

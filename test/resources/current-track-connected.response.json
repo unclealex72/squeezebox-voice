@@ -1,0 +1,11 @@
+{
+  "followupEvent": {
+    "name": "currently-playing",
+    "data": {
+      "room": "bedroom",
+      "currentTitle": "Bohemian Rhapsody",
+      "currentArtist": "Queen"
+    },
+    "contexts": []
+  }
+}

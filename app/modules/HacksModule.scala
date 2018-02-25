@@ -20,8 +20,10 @@ class HacksModule extends SimpleModule(
 )
 @Singleton
 class AlbumTrackReportingReversalHackProvider @Inject() (config: Configuration) extends Provider[AlbumTrackReportingReversalHack] {
-  override def get(): AlbumTrackReportingReversalHack = Hacks(config) { hacks =>
-    new SequenceMatchingAlbumTrackReportingReversalHack(hacks.albumArtistSwaps)}
+  override def get(): AlbumTrackReportingReversalHack = {
+    val hacks = Hacks(config)
+    new SequenceMatchingAlbumTrackReportingReversalHack(hacks.albumArtistSwaps)
+  }
 }
 
 case class Hacks(albumArtistSwaps: Seq[String])
@@ -32,20 +34,15 @@ object Hacks {
     (JsPath \ "albumArtistSwaps").read[Seq[String]].map(Hacks(_))
   }
 
-  private val hacksMap = new ConcurrentHashMap[String, Hacks]()
-
-  def apply[A](config: Configuration)(f: Hacks => A): A = {
-    val hacksFile = config.get[String]("hacks.path")
-    val hacks = hacksMap.computeIfAbsent(hacksFile, (_: String) => {
-      val in = new FileInputStream(hacksFile)
-      try {
-        Json.parse(in).as[Hacks]
-      }
-      finally {
-        in.close()
-      }
-    })
-    f(hacks)
+  def apply[A](config: Configuration): Hacks = {
+    val hacksFile: String = config.get[String]("hacks.path")
+    val in = new FileInputStream(hacksFile)
+    try {
+      Json.parse(in).as[Hacks]
+    }
+    finally {
+      in.close()
+    }
   }
 }
 

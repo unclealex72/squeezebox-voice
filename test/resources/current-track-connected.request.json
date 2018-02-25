@@ -1,0 +1,164 @@
+{
+  "originalRequest": {
+    "source": "google",
+    "version": "2",
+    "data": {
+      "isInSandbox": true,
+      "surface": {
+        "capabilities": [
+          {
+            "name": "actions.capability.MEDIA_RESPONSE_AUDIO"
+          },
+          {
+            "name": "actions.capability.WEB_BROWSER"
+          },
+          {
+            "name": "actions.capability.AUDIO_OUTPUT"
+          },
+          {
+            "name": "actions.capability.SCREEN_OUTPUT"
+          }
+        ]
+      },
+      "inputs": [
+        {
+          "rawInputs": [
+            {
+              "query": "tell my music player what song is this in the bedroom",
+              "inputType": "VOICE"
+            }
+          ],
+          "arguments": [
+            {
+              "rawText": "what song is this in the bedroom",
+              "textValue": "what song is this in the bedroom",
+              "name": "trigger_query"
+            },
+            {
+              "name": "3p_open_priority",
+              "boolValue": true
+            }
+          ],
+          "intent": "actions.intent.MAIN"
+        }
+      ],
+      "user": {
+        "lastSeen": "2018-02-24T17:20:49Z",
+        "locale": "en-GB",
+        "userId": "A***REMOVED***"
+      },
+      "conversation": {
+        "conversationId": "1519493146097",
+        "type": "NEW"
+      },
+      "availableSurfaces": [
+        {
+          "capabilities": [
+            {
+              "name": "actions.capability.AUDIO_OUTPUT"
+            },
+            {
+              "name": "actions.capability.SCREEN_OUTPUT"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "id": "99cb92eb-b642-4229-a25e-4bcfeb6bbb98",
+  "timestamp": "2018-02-24T17:25:46.392Z",
+  "lang": "en-gb",
+  "result": {
+    "source": "agent",
+    "resolvedQuery": "what song is this in the bedroom",
+    "speech": "",
+    "action": "now-playing",
+    "actionIncomplete": false,
+    "parameters": {
+      "room": "bedroom"
+    },
+    "contexts": [
+      {
+        "name": "google_assistant_welcome",
+        "parameters": {
+          "room.original": "bedroom",
+          "room": "bedroom"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "actions_capability_screen_output",
+        "parameters": {
+          "room.original": "bedroom",
+          "room": "bedroom"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "google_assistant_input_type_voice",
+        "parameters": {
+          "room.original": "bedroom",
+          "room": "bedroom"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "actions_capability_audio_output",
+        "parameters": {
+          "room.original": "bedroom",
+          "room": "bedroom"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "actions_capability_media_response_audio",
+        "parameters": {
+          "room.original": "bedroom",
+          "room": "bedroom"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "actions_capability_web_browser",
+        "parameters": {
+          "room.original": "bedroom",
+          "room": "bedroom"
+        },
+        "lifespan": 0
+      }
+    ],
+    "metadata": {
+      "matchedParameters": [
+        {
+          "required": true,
+          "dataType": "@room",
+          "name": "room",
+          "value": "$room",
+          "prompts": [],
+          "isList": false
+        }
+      ],
+      "intentName": "what's playing",
+      "intentId": "3ba79799-fe29-4204-90a8-e8d107c465fb",
+      "webhookUsed": "true",
+      "webhookForSlotFillingUsed": "false",
+      "nluResponseTime": 65
+    },
+    "fulfillment": {
+      "speech": "",
+      "messages": [
+        {
+          "type": 0,
+          "speech": ""
+        }
+      ]
+    },
+    "score": 0.9200000166893005
+  },
+  "status": {
+    "code": 200,
+    "errorType": "success",
+    "webhookTimedOut": false
+  },
+  "sessionId": "1519493146097"
+}

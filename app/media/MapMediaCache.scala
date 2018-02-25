@@ -114,7 +114,7 @@ class MapMediaCache @Inject() (removePunctuation: RemovePunctuationService) exte
     * @param rooms All known players.
     */
   override def updateRooms(rooms: Set[Room]): Set[Room] = {
-    roomMap = roomMap ++ rooms.uniquelyGroupBy(_.name.toLowerCase)
+    roomMap = rooms.uniquelyGroupBy(_.name.toLowerCase)
     roomMap.values.toSet
   }
 

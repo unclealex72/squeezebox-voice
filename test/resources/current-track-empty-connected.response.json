@@ -1,0 +1,9 @@
+{
+  "followupEvent": {
+    "name": "nothing-playing",
+    "data": {
+      "room": "bedroom"
+    },
+    "contexts": []
+  }
+}

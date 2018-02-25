@@ -1,0 +1,197 @@
+{
+  "originalRequest": {
+    "source": "google",
+    "version": "2",
+    "data": {
+      "isInSandbox": true,
+      "surface": {
+        "capabilities": [
+          {
+            "name": "actions.capability.AUDIO_OUTPUT"
+          },
+          {
+            "name": "actions.capability.WEB_BROWSER"
+          },
+          {
+            "name": "actions.capability.MEDIA_RESPONSE_AUDIO"
+          },
+          {
+            "name": "actions.capability.SCREEN_OUTPUT"
+          }
+        ]
+      },
+      "inputs": [
+        {
+          "rawInputs": [
+            {
+              "query": "queen",
+              "inputType": "VOICE"
+            }
+          ],
+          "arguments": [
+            {
+              "rawText": "queen",
+              "textValue": "queen",
+              "name": "text"
+            }
+          ],
+          "intent": "actions.intent.TEXT"
+        }
+      ],
+      "user": {
+        "lastSeen": "2018-02-24T17:14:10Z",
+        "locale": "en-GB",
+        "userId": "A***REMOVED***"
+      },
+      "conversation": {
+        "conversationId": "1519492760289",
+        "type": "ACTIVE",
+        "conversationToken": "[\"artist-required-context\"]"
+      },
+      "availableSurfaces": [
+        {
+          "capabilities": [
+            {
+              "name": "actions.capability.AUDIO_OUTPUT"
+            },
+            {
+              "name": "actions.capability.SCREEN_OUTPUT"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "id": "ce4c91d8-1750-4873-9953-76c939842dea",
+  "timestamp": "2018-02-24T17:20:49.507Z",
+  "lang": "en-gb",
+  "result": {
+    "source": "agent",
+    "resolvedQuery": "queen",
+    "speech": "",
+    "action": "provide-required-artist",
+    "actionIncomplete": false,
+    "parameters": {
+      "artist": "Queen",
+      "room": "bedroom",
+      "album": "Greatest Hits"
+    },
+    "contexts": [
+      {
+        "name": "actions_capability_screen_output",
+        "parameters": {
+          "artist": "Queen",
+          "album": "Greatest Hits",
+          "room.original": "",
+          "album.original": "",
+          "artist.original": "queen",
+          "room": "bedroom"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "actions_capability_audio_output",
+        "parameters": {
+          "artist": "Queen",
+          "album": "Greatest Hits",
+          "room.original": "",
+          "album.original": "",
+          "artist.original": "queen",
+          "room": "bedroom"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "google_assistant_input_type_voice",
+        "parameters": {
+          "artist": "Queen",
+          "album": "Greatest Hits",
+          "room.original": "",
+          "album.original": "",
+          "artist.original": "queen",
+          "room": "bedroom"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "actions_capability_media_response_audio",
+        "parameters": {
+          "artist": "Queen",
+          "album": "Greatest Hits",
+          "room.original": "",
+          "album.original": "",
+          "artist.original": "queen",
+          "room": "bedroom"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "actions_capability_web_browser",
+        "parameters": {
+          "artist": "Queen",
+          "album": "Greatest Hits",
+          "room.original": "",
+          "album.original": "",
+          "artist.original": "queen",
+          "room": "bedroom"
+        },
+        "lifespan": 0
+      },
+      {
+        "name": "artist-required-context",
+        "parameters": {
+          "artists.original": "",
+          "artist": "Queen",
+          "artists": [
+            "Billy Ocean",
+            "Del Shannon",
+            "Eurythmics",
+            "Fleetwood Mac",
+            "Queen",
+            "Santana",
+            "The Beach Boys",
+            "The Police"
+          ],
+          "album": "Greatest Hits",
+          "room.original": "",
+          "album.original": "",
+          "artist.original": "queen",
+          "room": "bedroom"
+        },
+        "lifespan": 1
+      }
+    ],
+    "metadata": {
+      "matchedParameters": [
+        {
+          "required": false,
+          "dataType": "@artist",
+          "name": "artist",
+          "value": "$artist",
+          "isList": false
+        }
+      ],
+      "intentName": "provide required artist",
+      "intentId": "8afe8be2-ed97-44c1-8e6b-c7f1dd43151e",
+      "webhookUsed": "true",
+      "webhookForSlotFillingUsed": "false",
+      "nluResponseTime": 26
+    },
+    "fulfillment": {
+      "speech": "",
+      "messages": [
+        {
+          "type": 0,
+          "speech": ""
+        }
+      ]
+    },
+    "score": 0.6499999761581421
+  },
+  "status": {
+    "code": 200,
+    "errorType": "success",
+    "webhookTimedOut": false
+  },
+  "sessionId": "1519492760289"
+}

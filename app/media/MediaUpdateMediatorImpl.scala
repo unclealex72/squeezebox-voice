@@ -1,11 +1,10 @@
 package media
 
 import javax.inject.Inject
-
 import dialogflow.UploadEntitiesService
 import models.{Album, Artist}
 import play.api.Logger
-import squeezebox.{MusicPlayer, MusicRepository}
+import squeezebox.{MusicPlayer, MusicRepository, RoomsProvider}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -14,7 +13,11 @@ import scala.concurrent.{ExecutionContext, Future}
   *
   * The default implementation of [[MediaUpdateMediator]].
   **/
-class MediaUpdateMediatorImpl @Inject()(val mediaCacheUpdater: MediaCacheUpdater, val musicRepository: MusicRepository, val uploadEntitiesService: UploadEntitiesService)(implicit val ec: ExecutionContext) extends MediaUpdateMediator {
+class MediaUpdateMediatorImpl @Inject()(
+                                         val mediaCacheUpdater: MediaCacheUpdater,
+                                         val musicRepository: MusicRepository,
+                                         val uploadEntitiesService: UploadEntitiesService,
+                                         val roomsProvider: RoomsProvider)(implicit val ec: ExecutionContext) extends MediaUpdateMediator {
 
   private def log(message: String): Unit = {
     Logger.info(message)
@@ -31,7 +34,7 @@ class MediaUpdateMediatorImpl @Inject()(val mediaCacheUpdater: MediaCacheUpdater
 
   override def update: Future[Unit] = {
     for {
-      scRooms <- "Searching for rooms" >> musicRepository.rooms
+      scRooms <- "Searching for rooms" >> roomsProvider.rooms()
       scAlbums <- "Searching for albums" >> musicRepository.albums
       scFavourites <- "Searching for favourites" >> musicRepository.favourites
       scPlaylists <- "Searching for playlists" >> musicRepository.playlists

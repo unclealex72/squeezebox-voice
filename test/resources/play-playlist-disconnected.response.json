@@ -1,0 +1,9 @@
+{
+  "followupEvent": {
+    "name": "room-not-connected",
+    "data": {
+      "room": "lounge"
+    },
+    "contexts": []
+  }
+}

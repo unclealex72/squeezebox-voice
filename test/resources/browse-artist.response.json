@@ -1,0 +1,13 @@
+{
+  "followupEvent": {
+    "name": "albums-for-artist",
+    "data": {
+      "artist": "Queen",
+      "albums": [
+        "A Night at the Opera",
+        "Greatest Hits"
+      ]
+    },
+    "contexts": []
+  }
+}
