@@ -1,9 +1,32 @@
 [
   {
+    "id": "3912f9f9-c0d2-4a63-9430-c7cbbaf0e7ab",
+    "data": [
+      {
+        "text": "what\u0027s playing in the @room:room",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": true,
+    "count": 0,
+    "updated": 1517434149
+  },
+  {
     "id": "67cc92b8-3468-4342-8742-70a62e9c0ee8",
     "data": [
       {
         "text": "Tell me what song is playing in the @room:room",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": true,
+    "count": 0
+  },
+  {
+    "id": "08d8e5be-8053-42c3-b0fe-bbcbdf8d7038",
+    "data": [
+      {
+        "text": "what\u0027s this song playing in the @room:room",
         "userDefined": false
       }
     ],
@@ -20,28 +43,5 @@
     ],
     "isTemplate": false,
     "count": 0
-  },
-  {
-    "id": "08d8e5be-8053-42c3-b0fe-bbcbdf8d7038",
-    "data": [
-      {
-        "text": "what\u0027s this song playing in the @room:room",
-        "userDefined": false
-      }
-    ],
-    "isTemplate": true,
-    "count": 0
-  },
-  {
-    "id": "3912f9f9-c0d2-4a63-9430-c7cbbaf0e7ab",
-    "data": [
-      {
-        "text": "what\u0027s playing in the @room:room",
-        "userDefined": false
-      }
-    ],
-    "isTemplate": true,
-    "count": 0,
-    "updated": 1517434149
   }
 ]

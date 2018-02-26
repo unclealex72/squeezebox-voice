@@ -21,7 +21,7 @@
           "dataType": "@artist",
           "name": "artists",
           "value": "#artist-required.artists",
-          "isList": false
+          "isList": true
         },
         {
           "id": "32468573-8172-4500-8c84-876df5b1bb3f",
@@ -54,7 +54,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1517071035,
+  "lastUpdate": 1519475787,
   "fallbackIntent": false,
   "events": [
     {

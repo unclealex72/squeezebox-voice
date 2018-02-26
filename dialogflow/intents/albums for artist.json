@@ -6,13 +6,30 @@
   "responses": [
     {
       "resetContexts": false,
+      "action": "albums-for-artist",
       "affectedContexts": [],
-      "parameters": [],
+      "parameters": [
+        {
+          "id": "60fa3787-0289-40e8-a719-7f1d0cbb565b",
+          "required": true,
+          "dataType": "@album",
+          "name": "albums",
+          "value": "#albums-for-artist.albums",
+          "isList": true
+        },
+        {
+          "id": "ddc45a24-f50b-44a2-86e8-063442f5fcfc",
+          "required": true,
+          "dataType": "@artist",
+          "name": "artist",
+          "value": "#albums-for-artist.artist"
+        }
+      ],
       "messages": [
         {
           "type": 0,
           "lang": "en",
-          "speech": "Artist #albums-for-artist.artist has recorded the following albums: #albums-for-artist.albums"
+          "speech": "Artist $artist has recorded the following albums: $albums"
         }
       ],
       "defaultResponsePlatforms": {},
@@ -22,7 +39,7 @@
   "priority": 500000,
   "webhookUsed": false,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1517764238,
+  "lastUpdate": 1519475965,
   "fallbackIntent": false,
   "events": [
     {
