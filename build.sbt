@@ -39,6 +39,8 @@ dockerCommands := {
     firstRunCommand + 1
   }
   val extraCommands = Seq(
+    Cmd("RUN", "apk", "update"),
+    Cmd("RUN", "apk", "add", "busybox-extras"),
     Cmd("RUN", "mkdir", "-p", "/opt/docker/ext"),
     Cmd("VOLUME", "/opt/docker/ext/"))
   prefixCommands ++ extraCommands ++ suffixCommands
