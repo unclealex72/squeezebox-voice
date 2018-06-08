@@ -9,9 +9,9 @@ case class WebhookRequest(action: Action, parameters: WebhookParameters)
 
 object WebhookRequest {
 
+  import Action._
   import play.api.libs.functional.syntax._
   import play.api.libs.json._
-  import Action._
 
   /**
     * Write a webhook request as JSON.

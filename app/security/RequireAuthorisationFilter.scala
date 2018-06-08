@@ -1,7 +1,5 @@
 package security
 
-import javax.inject.Inject
-
 import play.api.Configuration
 import play.api.http.{HttpErrorHandler, Status}
 import play.api.libs.streams.Accumulator
@@ -12,7 +10,7 @@ import play.api.mvc._
   *
   * A filter that requires an Authorization header to be sent with a value defined within configuration.
   **/
-class RequireAuthorisationFilter @Inject() (config: Configuration, errorHandler: HttpErrorHandler) extends EssentialFilter {
+class RequireAuthorisationFilter(config: Configuration, errorHandler: HttpErrorHandler) extends EssentialFilter {
 
   val header: String = "Authorization"
 

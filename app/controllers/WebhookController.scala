@@ -3,7 +3,7 @@ package controllers
 import cats.data.Validated.Invalid
 import cats.data._
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
+import javax.inject.Singleton
 import monads._
 import play.api.Logger
 import play.api.libs.json._
@@ -18,7 +18,7 @@ import scala.concurrent.{ExecutionContext, Future}
   * The controller to handle requests from and responses to DialogFlow.
   **/
 @Singleton
-class WebhookController @Inject()(cc: ControllerComponents, webhookService: WebhookService)(implicit ec: ExecutionContext) extends AbstractController(cc) {
+class WebhookController(cc: ControllerComponents, webhookService: WebhookService)(implicit ec: ExecutionContext) extends AbstractController(cc) {
 
   /**
     * The entry point for DialogFlow

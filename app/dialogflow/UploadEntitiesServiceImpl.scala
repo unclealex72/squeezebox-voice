@@ -1,12 +1,11 @@
 package dialogflow
 import java.io.IOException
-import javax.inject.Inject
 
 import models._
-import modules.DialogFlowToken
 import play.api.libs.json._
 import play.api.libs.ws.{WSClient, WSRequest}
 
+import scala.concurrent.duration.Duration
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
@@ -14,7 +13,10 @@ import scala.concurrent.{ExecutionContext, Future}
   *
   * The default implementation of the [[UploadEntitiesService]]
   **/
-class UploadEntitiesServiceImpl @Inject() (ws: WSClient, @DialogFlowToken authorisationToken: String)(implicit ec: ExecutionContext) extends UploadEntitiesService {
+class UploadEntitiesServiceImpl(
+                                 ws: WSClient,
+                                 authorisationToken: String,
+                                 timeout: Duration)(implicit ec: ExecutionContext) extends UploadEntitiesService {
 
   override def uploadAlbums(albums: Set[Album]): Future[Unit] = {
     uploadEntity[Album]("album", albums, _.entry)
@@ -57,7 +59,7 @@ class UploadEntitiesServiceImpl @Inject() (ws: WSClient, @DialogFlowToken author
           "Content-Type" -> "application/json").
         withMethod(method)
       val request: WSRequest = maybeBody.foldLeft(bodilessRequest)(_.withBody(_))
-      request.execute().map { response =>
+      request.withRequestTimeout(timeout).execute().map { response =>
         if (response.status == 200) {
           response.body[JsValue].as[J]
         } else {

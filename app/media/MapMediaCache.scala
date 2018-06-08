@@ -1,7 +1,6 @@
 package media
 
-import javax.inject.{Inject, Singleton}
-
+import javax.inject.Singleton
 import lexical.RemovePunctuationService
 import models._
 
@@ -10,7 +9,7 @@ import models._
   * Created by alex on 26/12/17
   **/
 @Singleton
-class MapMediaCache @Inject() (removePunctuation: RemovePunctuationService) extends MediaCacheView with MediaCacheUpdater {
+class MapMediaCache(removePunctuationService: RemovePunctuationService) extends MediaCacheView with MediaCacheUpdater {
 
   @volatile var albumMap: Map[String, Album] = Map.empty
   @volatile var artistMap: Map[String, Artist] = Map.empty
@@ -25,7 +24,7 @@ class MapMediaCache @Inject() (removePunctuation: RemovePunctuationService) exte
     * @return The album with the given title or none.
     */
   override def album(title: String): Option[Album] = {
-    albumMap.get(removePunctuation(title).toLowerCase)
+    albumMap.get(removePunctuationService(title).toLowerCase)
   }
 
   /**
@@ -35,7 +34,7 @@ class MapMediaCache @Inject() (removePunctuation: RemovePunctuationService) exte
     * @return The artist with the given title or none.
     */
   override def artist(name: String): Option[Artist] = {
-    artistMap.get(removePunctuation(name).toLowerCase)
+    artistMap.get(removePunctuationService(name).toLowerCase)
   }
 
   /**
@@ -45,7 +44,7 @@ class MapMediaCache @Inject() (removePunctuation: RemovePunctuationService) exte
     * @return The player with the given name or none.
     */
   override def player(name: String): Option[Room] = {
-    roomMap.get(removePunctuation(name).toLowerCase)
+    roomMap.get(removePunctuationService(name).toLowerCase)
   }
 
   /**
@@ -55,7 +54,7 @@ class MapMediaCache @Inject() (removePunctuation: RemovePunctuationService) exte
     * @return The favourite with the given name or none.
     */
   override def favourite(name: String): Option[Favourite] = {
-    favouriteMap.get(removePunctuation(name).toLowerCase)
+    favouriteMap.get(removePunctuationService(name).toLowerCase)
   }
 
   /**
@@ -65,7 +64,7 @@ class MapMediaCache @Inject() (removePunctuation: RemovePunctuationService) exte
     * @return The playlist with the given name or none.
     */
   override def playlist(name: String): Option[Playlist] = {
-    playlistMap.get(removePunctuation(name).toLowerCase)
+    playlistMap.get(removePunctuationService(name).toLowerCase)
   }
 
   /**

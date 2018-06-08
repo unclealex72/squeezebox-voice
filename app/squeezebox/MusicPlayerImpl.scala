@@ -1,14 +1,12 @@
 package squeezebox
 import java.net.{URLDecoder, URLEncoder}
 import java.nio.charset.StandardCharsets
-import java.text.Normalizer
-import javax.inject.{Inject, Singleton}
 
+import javax.inject.Singleton
 import lexical.{RemovePunctuationService, SynonymService}
 import models._
 import play.api.Logger
 
-import scala.collection.SortedSet
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
@@ -17,7 +15,7 @@ import scala.util.Try
   * Created by alex on 24/12/17
   **/
 @Singleton
-class MusicPlayerImpl @Inject()(commandService: CommandService, synonyms: SynonymService, removePunctuation: RemovePunctuationService)(implicit ec: ExecutionContext) extends MusicPlayer with MusicRepository {
+class MusicPlayerImpl(commandService: CommandService, synonymService: SynonymService, removePunctuationService: RemovePunctuationService)(implicit ec: ExecutionContext) extends MusicPlayer with MusicRepository {
 
   def execute(command: String): Future[Seq[(String, String)]] = {
     Logger.info(command)
@@ -104,8 +102,8 @@ class MusicPlayerImpl @Inject()(commandService: CommandService, synonyms: Synony
   }
 
   def entryOf(name: String): Entry = {
-    val unpunctuatedName = removePunctuation(name)
-    Entry(unpunctuatedName, synonyms(unpunctuatedName))
+    val unpunctuatedName = removePunctuationService(name)
+    Entry(unpunctuatedName, synonymService(unpunctuatedName))
   }
 
   def toMaps(response: Seq[(String, String)], delimitingKey: String): Seq[Map[String, String]] = {

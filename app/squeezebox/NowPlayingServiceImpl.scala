@@ -1,7 +1,5 @@
 package squeezebox
 
-import javax.inject.Inject
-
 import hacks.AlbumTrackReportingReversalHack
 import models.Room
 
@@ -10,14 +8,14 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * Created by alex on 31/01/18
   **/
-class NowPlayingServiceImpl @Inject() (
-                                        squeezeCentre: MusicPlayer,
-                                        albumTrackReportingReversalHack: AlbumTrackReportingReversalHack)
+class NowPlayingServiceImpl(
+                             musicPlayer: MusicPlayer,
+                             albumTrackReportingReversalHack: AlbumTrackReportingReversalHack)
                                       (implicit ec: ExecutionContext)
   extends NowPlayingService {
 
   override def apply(room: Room): Future[Option[CurrentTrack]] = {
-    squeezeCentre.playlistInformation(room).map { maybePlaylistInformation =>
+    musicPlayer.playlistInformation(room).map { maybePlaylistInformation =>
       maybePlaylistInformation.map { playlistInformation =>
         val originalTitleAndArtist = (playlistInformation.title, playlistInformation.maybeArtist.getOrElse("Unknown"))
         val requiresReversal = playlistInformation.maybeRemoteTitle match {

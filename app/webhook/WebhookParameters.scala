@@ -165,8 +165,8 @@ case class WebhookParameters(
 
 object WebhookParameters {
 
-  import play.api.libs.json._
   import play.api.libs.functional.syntax._
+  import play.api.libs.json._
 
   /**
     * An enumeration for the parameters stored in [[WebhookParameters]]

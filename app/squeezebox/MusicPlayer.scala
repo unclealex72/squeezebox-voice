@@ -2,8 +2,7 @@ package squeezebox
 
 import models._
 
-import scala.collection.SortedSet
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 /**
   * An Interface to play albums, favourites and playlists and also to check which players are currently connected.

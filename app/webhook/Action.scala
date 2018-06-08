@@ -4,6 +4,7 @@ package webhook
   * Created by alex on 11/02/18
   **/
 import enumeratum._
+
 import scala.collection.immutable.IndexedSeq
 
 sealed case class Action(action: String) extends EnumEntry

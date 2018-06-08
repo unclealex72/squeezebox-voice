@@ -1,5 +1,5 @@
 import com.typesafe.sbt.packager.docker._
-import ReleaseTransformations._
+import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
 name := """squeezebox-voice"""
 organization := "uk.co.unclealex"
@@ -11,7 +11,7 @@ scalacOptions ++= Seq("-target:jvm-1.8", "-Ypartial-unification")
 javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
 
 libraryDependencies ++= Seq(
-  guice,
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0",
   ws,
   "com.beachape" %% "enumeratum" % "1.5.12",
   "org.typelevel" %% "cats-core" % "1.0.1"

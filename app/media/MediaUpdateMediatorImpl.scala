@@ -1,10 +1,9 @@
 package media
 
-import javax.inject.Inject
 import dialogflow.UploadEntitiesService
 import models.{Album, Artist}
 import play.api.Logger
-import squeezebox.{MusicPlayer, MusicRepository, RoomsProvider}
+import squeezebox.{MusicRepository, RoomsProvider}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -13,7 +12,7 @@ import scala.concurrent.{ExecutionContext, Future}
   *
   * The default implementation of [[MediaUpdateMediator]].
   **/
-class MediaUpdateMediatorImpl @Inject()(
+class MediaUpdateMediatorImpl(
                                          val mediaCacheUpdater: MediaCacheUpdater,
                                          val musicRepository: MusicRepository,
                                          val uploadEntitiesService: UploadEntitiesService,

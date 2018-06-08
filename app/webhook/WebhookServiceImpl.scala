@@ -1,26 +1,24 @@
 package webhook
-import javax.inject.Inject
-
 import cats.data.Validated._
 import cats.data._
 import cats.implicits._
 import media.{MediaCacheView, MediaUpdateMediator}
 import models.{Album, Artist, Room}
-import squeezebox.{NowPlayingService, MusicPlayer}
+import squeezebox.{MusicPlayer, NowPlayingService}
+import webhook.Action._
+import webhook.Event._
 
 import scala.concurrent.{ExecutionContext, Future}
-import Action._
-import Event._
 /**
   * Created by alex on 28/01/18
   *
   * The default implementation of [[WebhookService]]
   **/
-class WebhookServiceImpl @Inject() (
-                                     musicPlayer: MusicPlayer,
-                                     mediaCacheView: MediaCacheView,
-                                     nowPlaying: NowPlayingService,
-                                     mediaUpdateMediator: MediaUpdateMediator)
+class WebhookServiceImpl(
+                          musicPlayer: MusicPlayer,
+                          mediaCacheView: MediaCacheView,
+                          nowPlayingService: NowPlayingService,
+                          mediaUpdateMediator: MediaUpdateMediator)
                                    (implicit ec: ExecutionContext) extends WebhookService {
 
   type EventualResponse = Future[ValidatedNel[String, WebhookResponse]]
@@ -75,7 +73,7 @@ class WebhookServiceImpl @Inject() (
   }
 
   def currentTrack(room: Room, parameters: WebhookParameters): EventualResponse = {
-    nowPlaying(room).map {
+    nowPlayingService(room).map {
       case Some(currentTrack) =>
         followup(
           CurrentlyPlaying,

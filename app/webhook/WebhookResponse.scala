@@ -11,8 +11,8 @@ case class WebhookResponse(event: Event, parameters: WebhookParameters, contexts
 
 object WebhookResponse {
 
-  import play.api.libs.json._
   import WebhookParameters._
+  import play.api.libs.json._
 
   implicit val writesWebhookResponse: Writes[WebhookResponse] = {
     (webhookResponse: WebhookResponse) => {
