@@ -25,7 +25,7 @@ libraryDependencies ++= Seq(
 
 
 dockerBaseImage := "openjdk:alpine"
-dockerExposedPorts := Seq(9443)
+dockerExposedPorts := Seq(9000)
 maintainer := "Alex Jones <alex.jones@unclealex.co.uk>"
 dockerUsername := Some("unclealex72")
 version in Docker := "latest"
@@ -43,7 +43,6 @@ dockerCommands := {
     Cmd("VOLUME", "/opt/docker/ext/"))
   prefixCommands ++ extraCommands ++ suffixCommands
 }
-javaOptions in Universal ++= Seq("-Dhttps.port=9443", "-Dhttp.port=disabled")
 
 publish := { (publish in Docker).value }
 

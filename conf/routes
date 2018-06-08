@@ -3,5 +3,5 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-POST    /update                 controllers.UpdateController.update
-POST    /webhook                controllers.WebhookController.webhook
+POST    /squeezebox-voice/update                 controllers.UpdateController.update
+POST    /squeezebox-voice/webhook                controllers.WebhookController.webhook
