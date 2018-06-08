@@ -43,7 +43,9 @@ dockerCommands := {
     Cmd("VOLUME", "/opt/docker/ext/"))
   prefixCommands ++ extraCommands ++ suffixCommands
 }
-
+javaOptions in Universal ++= Seq(
+  "-Dpidfile.path=/dev/null"
+)
 publish := { (publish in Docker).value }
 
 releaseProcess := Seq[ReleaseStep](
