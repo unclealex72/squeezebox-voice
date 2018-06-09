@@ -1,6 +1,5 @@
 package security
 
-import play.api.Configuration
 import play.api.http.{HttpErrorHandler, Status}
 import play.api.libs.streams.Accumulator
 import play.api.mvc._
@@ -10,17 +9,16 @@ import play.api.mvc._
   *
   * A filter that requires an Authorization header to be sent with a value defined within configuration.
   **/
-class RequireAuthorisationFilter(config: Configuration, errorHandler: HttpErrorHandler) extends EssentialFilter {
+class RequireAuthorisationFilter(token: String, errorHandler: HttpErrorHandler) extends EssentialFilter {
 
   val header: String = "Authorization"
 
-  val token: String = config.get[String]("security.token")
   val bearer: String = s"Bearer $token"
 
   override def apply(next: EssentialAction): EssentialAction = { req =>
     val result: Either[(Int, String), Unit] = for {
-      auth <- req.headers.get(header).toRight(Status.FORBIDDEN -> "forbidden")
-      _ <- if (auth == bearer) Right({}) else Left(Status.UNAUTHORIZED -> "Unauthorized")
+      auth <- req.headers.get(header).toRight(Status.UNAUTHORIZED -> "Unauthorized")
+      _ <- if (auth == bearer) Right({}) else Left(Status.FORBIDDEN -> "forbidden")
     } yield {}
     result match {
       case Right(_) => next(req)

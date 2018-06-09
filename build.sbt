@@ -42,7 +42,8 @@ dockerCommands := {
     Cmd("RUN", "apk", "update"),
     Cmd("RUN", "apk", "add", "busybox-extras"),
     Cmd("RUN", "mkdir", "-p", "/opt/docker/ext"),
-    Cmd("VOLUME", "/opt/docker/ext/"))
+    Cmd("VOLUME", "/opt/docker/ext/"),
+    Cmd("EXPOSE", "9000"))
   prefixCommands ++ extraCommands ++ suffixCommands
 }
 javaOptions in Universal ++= Seq(

@@ -10,10 +10,12 @@ import lexical._
 import media._
 import play.api.libs.json.{JsPath, Json, Reads}
 import play.api.libs.ws.ahc.AhcWSComponents
+import play.api.mvc.EssentialFilter
 import play.api.routing.Router
 import play.api.{ApplicationLoader, BuiltInComponentsFromContext, Configuration}
 import play.filters.HttpFiltersComponents
 import router.Routes
+import security.RequireAuthorisationFilter
 import squeezebox._
 import webhook.{WebhookService, WebhookServiceImpl}
 
@@ -72,6 +74,13 @@ class AppComponents(context: ApplicationLoader.Context)
     nowPlayingService = nowPlayingService,
     mediaUpdateMediator = mediaUpdateMediator)
 
+  // Security
+
+  val requireAuthorisationFilter: EssentialFilter =
+    new RequireAuthorisationFilter(
+      token = configuration.get[String]("security.token"),
+      errorHandler = httpErrorHandler)
+
   // Startup
 
   Await.result(mediaUpdateMediator.update, 1.minute)
@@ -89,6 +98,14 @@ class AppComponents(context: ApplicationLoader.Context)
     updateController,
     webhookController
   )
+
+  override def httpFilters: Seq[EssentialFilter] = {
+    /*
+    val defaultFilters: Seq[EssentialFilter] = super.httpFilters
+    defaultFilters :+ requireAuthorisationFilter
+    */
+    Seq(requireAuthorisationFilter)
+  }
 
   def both[M1, M2](m: M1 with M2): (M1, M2) = (m, m)
 
